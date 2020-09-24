@@ -71,7 +71,6 @@ class switchButton extends HTMLElement{
     super();
     this.selector = this.attachShadow({mode:"closed"})
     this.selector.appendChild(switchButtonTemplate.content.cloneNode(true))
-    this.isLoad = false
   }
 
   get value(){
@@ -130,15 +129,15 @@ class switchButton extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isLoad && this.name) this.querySelector("input").value = this.value
-        if(this.isLoad && this.onTrue && newValue == "true") eval(this.onTrue)
-        if(this.isLoad && this.onFalse && newValue == "false") eval(this.onFalse)
+        if(this.isConnected && this.name) this.querySelector("input").value = this.value
+        if(this.isConnected && this.onTrue && newValue == "true") eval(this.onTrue)
+        if(this.isConnected && this.onFalse && newValue == "false") eval(this.onFalse)
       break;
       case 'name':
-        if(this.isLoad && this.name) this.querySelector("input").name = this.name
+        if(this.isConnected && this.name) this.querySelector("input").name = this.name
       break;
     }
-  };
+  }
 
   onClick = () => {
     if (this.value == "true") this.value = "false"
@@ -147,12 +146,10 @@ class switchButton extends HTMLElement{
   }
 
   connectedCallback(){    
-    if (!this.value) this.value = false;
-    if (!this.darkMode) this.darkMode = false;
+    if (!this.value) this.value = false
+    if (!this.darkMode) this.darkMode = false
     if (this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
-    this.isLoad = true;
   }
 }
 customElements.define("rode-switchbutton",switchButton)
-
