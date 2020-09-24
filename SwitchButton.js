@@ -10,8 +10,7 @@ switchButtonTemplate.innerHTML =
   :host div{
     height: 24px !important;
     width: 38px !important;
-    border-radius: 15px !important;
-    backdrop-filter:blur(10px);
+    border-radius: 14px !important;
     padding: 2px !important;
     box-sizing: border-box !important;
     -webkit-transition: background-color .2s linear !important;
@@ -24,6 +23,7 @@ switchButtonTemplate.innerHTML =
     -moz-user-select: none !important; 
     -ms-user-select: none !important; 
     user-select: none !important;
+    backdrop-filter: blur(10px);
     }
   :host div > div{
     height: 20px !important;
@@ -36,10 +36,10 @@ switchButtonTemplate.innerHTML =
     transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275) !important;
   }
   :host([darkmode=true]) > div{
-    background-color: rgba(72,72,74,0.5) !important;
+    background-color: rgba(99,99,102,0.5) !important;
   }  
   :host([darkmode=false]) > div{
-    background-color: rgba(174,174,178,0.25) !important;
+    background-color: rgba(174,174,178,0.5) !important;
   }
   :host([darkmode=true][value=true]) > div{
     background-color: rgba(48,209,88,1) !important;
@@ -103,7 +103,7 @@ class switchButton extends HTMLElement{
   }
 
   set disabled(bool){
-    if(Bool) this.setAttribute("disabled","")
+    if(bool) this.setAttribute("disabled","")
     else this.removeAttribute("disabled")
   }
 
@@ -148,7 +148,7 @@ class switchButton extends HTMLElement{
 
   connectedCallback(){    
     if (!this.value) this.value = false;
-    if (!this.darkmode) this.darkmode = false;
+    if (!this.darkMode) this.darkMode = false;
     if (this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
     this.isLoad = true;
