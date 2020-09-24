@@ -1,5 +1,5 @@
-const SwitchButtonTemplate = document.createElement("template")
-SwitchButtonTemplate.innerHTML = 
+const switchButtonTemplate = document.createElement("template")
+switchButtonTemplate.innerHTML = 
   `
   <style>
   :host{
@@ -66,11 +66,11 @@ SwitchButtonTemplate.innerHTML =
   </style>
   <div><div></div></div>
   `
-class SwitchButton extends HTMLElement{
+class switchButton extends HTMLElement{
   constructor(){
     super();
-    this.selector = this.attachShadow({mode:"open"})
-    this.selector.appendChild(SwitchButtonTemplate.content.cloneNode(true))
+    this.selector = this.attachShadow({mode:"closed"})
+    this.selector.appendChild(switchButtonTemplate.content.cloneNode(true))
     this.isLoad = false
   }
 
@@ -78,51 +78,69 @@ class SwitchButton extends HTMLElement{
     return this.getAttribute("value")
   }
 
-  set value(Bool){
-    this.setAttribute("value",Bool)
+  set value(bool){
+    this.setAttribute("value",bool)
   }
 
   get name(){
     return this.getAttribute("name")
   }
 
-  set name(Name){
-    this.setAttribute("name",Name)
+  set name(name){
+    this.setAttribute("name",name)
   }
 
-  get darkmode(){
-    return this.getAttribute("darkmode")
+  get darkMode(){
+    return this.getAttribute("darkMode")
   }
 
-  set darkmode(Bool){
-    return this.setAttribute("darkmode",Bool)
+  set darkMode(bool){
+    this.setAttribute("darkMode",bool)
   }
 
   get disabled(){
     return this.hasAttribute("disabled")
   }
 
-  set disabled(Bool){
+  set disabled(bool){
     if(Bool) this.setAttribute("disabled","")
     else this.removeAttribute("disabled")
   }
 
-  static get observedAttributes(){
-    return ["value","name","darkmode","disabled"]
+  get onTrue(){
+    return this.getAttribute("onTrue")
   }
 
-  attributeChangedCallback(Attr,oldValue,newValue){
-    switch(Attr){
+  set onTrue(event){
+    this.setAttribute("onTrue",event)
+  }
+
+  get onFalse(){
+    return this.getAttribute("onFalse")
+  }
+
+  set onFalse(event){
+    this.setAttribute("onFalse",event)
+  }
+
+  static get observedAttributes(){
+    return ["value","name","darkMode","disabled","onTrue","onFalse"]
+  }
+
+  attributeChangedCallback(attr,oldValue,newValue){
+    switch(attr){
       case 'value':
-        if(this.name && this.isLoad) this.querySelector("input").value = this.value
+        if(this.isLoad && this.name) this.querySelector("input").value = this.value
+        if(this.isLoad && this.onTrue && newValue == "true") eval(this.onTrue)
+        if(this.isLoad && this.onFalse && newValue == "false") eval(this.onFalse)
       break;
       case 'name':
-        if(this.name && this.isLoad) this.querySelector("input").name = this.name
+        if(this.isLoad && this.name) this.querySelector("input").name = this.name
       break;
     }
   };
 
-  Click(){
+  onClick = () => {
     if (this.value == "true") this.value = "false"
     else if (this.value == "false") this.value = "true"
     if(this.name) this.querySelector("input").value = this.value
@@ -132,9 +150,9 @@ class SwitchButton extends HTMLElement{
     if (!this.value) this.value = false;
     if (!this.darkmode) this.darkmode = false;
     if (this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
-    this.selector.querySelector(":host>div").addEventListener("click",this.Click.bind(this))
+    this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
     this.isLoad = true;
   }
 }
-customElements.define("rode-switchbutton",SwitchButton)
+customElements.define("rode-switchbutton",switchButton)
 
