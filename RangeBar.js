@@ -11,7 +11,6 @@ rangeBarTemplate.innerHTML =
   width:100%;
   height:100%;
   border-radius:15px;
-  border-radius: 15px;
   overflow: hidden;
   background-color: rgba(174,174,178,0.5) !important;
   border: 0px solid transparent;
@@ -35,8 +34,8 @@ rangeBarTemplate.innerHTML =
 class rangeBar extends HTMLElement{
   constructor(){
     super()
-    this.selector = this.attachShadow({mode:"closed"})
-    this.selector.appendChild(rangeBarTemplate.content.cloneNode(true))
+    this.shadow = this.attachShadow({mode:"closed"})
+    this.shadow.appendChild(rangeBarTemplate.content.cloneNode(true))
   }
 
   get min(){
@@ -93,9 +92,9 @@ class rangeBar extends HTMLElement{
   };
 
   onClick = (event) => {
-    let sheets = this.selector.styleSheets[1]
+    let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
-    let clickedPoint = (event.offsetX / this.offsetWidth) * 100
+    let clickedPoint = ((event.offsetX + 4) / this.offsetWidth) * 100
     let divider = 100 / ((this.max - this.min) / this.step)
     let newBarValue = divider * Math.round(clickedPoint / divider)
     rules[0].style.width = `${newBarValue}%`
@@ -111,19 +110,13 @@ class rangeBar extends HTMLElement{
   }
 
   valueChanged = () => {
-      let sheets = this.selector.styleSheets[1]
+      let sheets = this.shadow.styleSheets[1]
       let rules = sheets.cssRules || sheets.rules
       rules[0].style.width = `${this.valueToWidth()}%` 
   }
 
-  toggleMaxMin = () => {
-    if(this.value==this.max) this.value = this.min
-    else if( this.value==this.min ) this.value = this.max
-    else this.value = this.max
-  }
-
   onScroll = (event) => {
-    let sheets = this.selector.styleSheets[1]
+    let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     if(event.wheelDelta < 0 && this.value!=this.min){
       this.value = parseInt(this.value) - parseInt(this.step)
@@ -141,16 +134,14 @@ class rangeBar extends HTMLElement{
     if(!this.min) this.min=1
     if(!this.max) this.max=100
     if(!this.step) this.step=1
-    let bar = this.selector.querySelector(":host>div")
+    let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
     bar.addEventListener("click",this.onClick.bind(this))
     bar.addEventListener("mousemove",(event) => mousedown && this.onClick(event))
     bar.addEventListener("mousedown",()=>mousedown=true)
     bar.addEventListener("mouseup",()=>mousedown=false)
-    bar.addEventListener("mouseleave",()=>mousedown=false)
+    bar.addEventListener("mouseout",()=>mousedown=false)
     bar.addEventListener("mousewheel",this.onScroll.bind(this))
-    bar.addEventListener("dblclick",this.toggleMaxMin.bind(this))
-    console.log(this.var)
   }
 }
 
