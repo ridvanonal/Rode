@@ -64,6 +64,7 @@ switchButtonTemplate.innerHTML =
   }
 
   </style>
+
   <div><div></div></div>
   `
 class switchButton extends HTMLElement{
@@ -137,18 +138,18 @@ class switchButton extends HTMLElement{
         if(this.isConnected && this.name) this.querySelector("input").name = this.name
       break;
     }
-  }
+  };
 
   onClick = () => {
-    if (this.value == "true") this.value = "false"
-    else if (this.value == "false") this.value = "true"
+    if(this.value == "true") this.value = "false"
+    else if(this.value == "false") this.value = "true"
     if(this.name) this.querySelector("input").value = this.value
   }
 
   connectedCallback(){    
-    if (!this.value) this.value = false
-    if (!this.darkMode) this.darkMode = false
-    if (this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
+    if(!this.value) this.value = false
+    if(!this.darkMode) this.darkMode = false
+    if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
   }
 }
