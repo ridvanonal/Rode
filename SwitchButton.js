@@ -137,7 +137,7 @@ class switchButton extends HTMLElement{
         if(this.isConnected && this.name) this.querySelector("input").name = this.name
       break;
     }
-  };
+  }
 
   onClick = () => {
     if (this.value == "true") this.value = "false"
