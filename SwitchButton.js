@@ -68,7 +68,7 @@ switchButtonTemplate.innerHTML =
   `
 class switchButton extends HTMLElement{
   constructor(){
-    super();
+    super()
     this.selector = this.attachShadow({mode:"closed"})
     this.selector.appendChild(switchButtonTemplate.content.cloneNode(true))
   }
@@ -137,7 +137,7 @@ class switchButton extends HTMLElement{
         if(this.isConnected && this.name) this.querySelector("input").name = this.name
       break;
     }
-  }
+  };
 
   onClick = () => {
     if (this.value == "true") this.value = "false"
