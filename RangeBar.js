@@ -12,10 +12,14 @@ rangeBarTemplate.innerHTML =
     height:100%;
     border-radius:15px;
     overflow: hidden;
-    background-color: rgba(174,174,178,0.5) !important;
     border: 0px solid transparent;
     box-sizing: border-box;
-    transition: border .09s linear;
+    -webkit-transition: border .09s linear,
+                        background-color .2s linear ;
+    -ms-transition: border .09s linear,
+                    background-color .2s linear;
+    transition: border .09s linear,
+                background-color .2s linear !important;
   }
   :host > div:hover{
     border-width: 5px;
@@ -24,11 +28,29 @@ rangeBarTemplate.innerHTML =
     height: 100%;
     content: "";
     display: block;
-    background-color:rgba(242,242,247,0.5);
-    transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                        background-color .2s linear;
+    -ms-transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                    background-color .2s linear;
+    transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                background-color .2s linear;
+  }
+  :host([darkmode=false]) > div{
+    background-color: rgba(174,174,178,0.5) !important;
+  }
+  :host([darkmode=false]) > div::after{
+    background-color:rgba(242,242,247,0.5) !important;
+  }
+  :host([darkmode=true]) > div{
+    background-color: rgba(99,99,102,0.5) !important;
+  }
+  :host([darkmode=true]) > div::after{
+    background-color:rgba(28,28,30,0.5) !important;
   }
   </style>
+
   <style> :host > div::after{ width:0% } </style>
+  
   <div></div>
   `
 class rangeBar extends HTMLElement{
@@ -36,6 +58,14 @@ class rangeBar extends HTMLElement{
     super()
     this.shadow = this.attachShadow({mode:"closed"})
     this.shadow.appendChild(rangeBarTemplate.content.cloneNode(true))
+  }
+
+  get name(){
+    return this.getAttribute("name")
+  }
+
+  set name(name){
+    this.setAttribute("name",name)
   }
 
   get min(){
@@ -70,6 +100,30 @@ class rangeBar extends HTMLElement{
     this.setAttribute("value",this.valueChecked(value))
   }
 
+  get darkMode(){
+    return this.getAttribute("darkMode")
+  }
+
+  set darkMode(bool){
+    this.setAttribute("darkMode",bool)
+  }
+
+  get onChange(){
+    return this.getAttribute("onChange")
+  }
+
+  set onChange(event){
+    this.setAttribute("onChange",event)
+  }
+
+  get onValue(){
+    return this.getAttribute("onValue")
+  }
+
+  set onValue(event){
+    this.setAttribute("onValue",event)
+  }
+
   minCalculator = () => {
     this.min = (this.step) * Math.ceil(this.min / this.step)
   }
@@ -79,13 +133,19 @@ class rangeBar extends HTMLElement{
   }
 
   static get observedAttributes(){
-    return ["value"]
+    return ["value","name"]
   }
 
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
         if(this.isConnected) this.onValueChanged()
+        if(this.isConnected && this.name) this.querySelector("input").value = this.value
+        if(this.isConnected && this.onChange) eval(this.onChange)
+        if(this.isConnected && this.onValue && Number(this.onValue.split(",")[0]) == this.value) eval(this.onValue.split(",")[1])
+      break;
+      case 'name':
+        if(this.isConnected && this.name) this.querySelector("input").name = this.name
       break;
     }
   };
@@ -135,11 +195,13 @@ class rangeBar extends HTMLElement{
 
   connectedCallback(){
     this.minCalculator()
-    this.maxCalculator()   
+    this.maxCalculator()
+    if(!this.darkMode) this.darkMode = false   
     if(!this.min) this.min=1
     if(!this.max) this.max=100
     if(!this.step) this.step=1
     if(!this.value) this.value=this.min
+    if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     else this.value=this.valueChecked(this.value)
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
