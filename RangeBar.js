@@ -1,36 +1,36 @@
 const rangeBarTemplate = document.createElement("template")
 rangeBarTemplate.innerHTML = 
-`
-<style>
-:host{
-  display:block;
-  height:50px;
-  width:300px;
-}
-:host > div{
-  width:100%;
-  height:100%;
-  border-radius:15px;
-  overflow: hidden;
-  background-color: rgba(174,174,178,0.5) !important;
-  border: 0px solid transparent;
-  box-sizing: border-box;
-  transition: border .09s linear;
-}
-:host > div:hover{
-  border-width: 5px;
-}
-:host > div::after{
-  height: 100%;
-  content: "";
-  display: block;
-  background-color:rgba(242,242,247,0.5);
-  transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-</style>
-<style> :host > div::after{ width:0% } </style>
-<div></div>
-`
+  `
+  <style>
+  :host{
+    display:block;
+    height:50px;
+    width:300px;
+  }
+  :host > div{
+    width:100%;
+    height:100%;
+    border-radius:15px;
+    overflow: hidden;
+    background-color: rgba(174,174,178,0.5) !important;
+    border: 0px solid transparent;
+    box-sizing: border-box;
+    transition: border .09s linear;
+  }
+  :host > div:hover{
+    border-width: 5px;
+  }
+  :host > div::after{
+    height: 100%;
+    content: "";
+    display: block;
+    background-color:rgba(242,242,247,0.5);
+    transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  </style>
+  <style> :host > div::after{ width:0% } </style>
+  <div></div>
+  `
 class rangeBar extends HTMLElement{
   constructor(){
     super()
@@ -85,7 +85,7 @@ class rangeBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        this.onValueChanged()
+        if(this.isConnected) this.onValueChanged()
       break;
     }
   };
@@ -140,6 +140,7 @@ class rangeBar extends HTMLElement{
     if(!this.max) this.max=100
     if(!this.step) this.step=1
     if(!this.value) this.value=this.min
+    else this.value=this.valueChecked(this.value)
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
     bar.addEventListener("click",this.onClick.bind(this))
