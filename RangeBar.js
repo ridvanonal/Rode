@@ -39,7 +39,7 @@ class rangeBar extends HTMLElement{
   }
 
   get min(){
-    return this.getAttribute("min")
+    return Number(this.getAttribute("min"))
   }
 
   set min(minValue){
@@ -47,27 +47,27 @@ class rangeBar extends HTMLElement{
   }
 
   get max(){
-    return this.getAttribute("max")
+    return Number(this.getAttribute("max"))
   }
 
   set max(maxValue){
     this.setAttribute("max",maxValue)
   }
 
-  get value(){
-    return this.getAttribute("value")
-  }
-
-  set value(value){
-    this.setAttribute("value",value)
-  }
-
   get step(){
-    return this.getAttribute("step")
+    return Number(this.getAttribute("step"))
   }
 
   set step(stepValue){
     this.setAttribute("step",stepValue)
+  }
+
+  get value(){
+    return Number(this.getAttribute("value"))
+  }
+
+  set value(value){
+    this.setAttribute("value",this.valueChecked(value))
   }
 
   minCalculator = () => {
@@ -85,9 +85,7 @@ class rangeBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(newValue % this.step == 0 && this.isConnected) this.valueChanged() 
-        else {console.log('%c Invalid Value! ', 'color: rgb(255,59,48)')
-              if(oldValue) this.value=oldValue}
+        this.onValueChanged()
       break;
     }
   };
@@ -109,34 +107,39 @@ class rangeBar extends HTMLElement{
   }
 
   widthToValue = (width) =>{
-    return this.step*Math.round((parseInt(this.min)+(this.max-this.min)*(width-0)/(100-0))/this.step)
+    return this.step*Math.round((this.min+(this.max-this.min)*(width-0)/(100-0))/this.step)
   }
 
-  valueChanged = () => {
+  onValueChanged = () => {
       let sheets = this.shadow.styleSheets[1]
       let rules = sheets.cssRules || sheets.rules
       rules[0].style.width = `${this.valueToWidth()}%` 
+  }
+
+  valueChecked = (value) => {
+    if(value <= this.max && value >= this.min && value % this.step==0) return value
+    else return this.min 
   }
 
   onScroll = (event) => {
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     if(event.wheelDelta < 0 && this.value!=this.min){
-      this.value = parseInt(this.value) - parseInt(this.step)
+      this.value = this.value - this.step
     }
     else if(event.wheelDelta>0 && this.value != this.max){
-      this.value = parseInt(this.value) + parseInt(this.step)
+      this.value = this.value + this.step
     }
     rules[0].style.width = `${this.valueToWidth()}%`
   }
 
   connectedCallback(){
     this.minCalculator()
-    this.maxCalculator()
-    if(!this.value) this.value=this.min
+    this.maxCalculator()   
     if(!this.min) this.min=1
     if(!this.max) this.max=100
     if(!this.step) this.step=1
+    if(!this.value) this.value=this.min
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
     bar.addEventListener("click",this.onClick.bind(this))
