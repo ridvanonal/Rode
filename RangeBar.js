@@ -18,7 +18,7 @@ rangeBarTemplate.innerHTML =
   transition: border .09s linear;
 }
 :host > div:hover{
-  border-width: 4px;
+  border-width: 5px;
 }
 :host > div::after{
   height: 100%;
@@ -85,8 +85,9 @@ class rangeBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(newValue % this.step == 0) this.valueChanged() 
-        else {console.log('%c Invalid Value! ', 'color: rgb(255,59,48)');this.value=oldValue}
+        if(newValue % this.step == 0 && this.isConnected) this.valueChanged() 
+        else {console.log('%c Invalid Value! ', 'color: rgb(255,59,48)')
+              if(oldValue) this.value=oldValue}
       break;
     }
   };
@@ -94,11 +95,13 @@ class rangeBar extends HTMLElement{
   onClick = (event) => {
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
-    let clickedPoint = ((event.offsetX + 4) / this.offsetWidth) * 100
+    let clickedPoint = (event.offsetX / (this.offsetWidth-10)) * 100
+    clickedPoint > 100 ? clickedPoint=100 : null
+    clickedPoint < 0 ? clickedPoint=0 : null
     let divider = 100 / ((this.max - this.min) / this.step)
     let newBarValue = divider * Math.round(clickedPoint / divider)
     rules[0].style.width = `${newBarValue}%`
-    this.value = this.widthToValue(newBarValue)
+    if(this.widthToValue(newBarValue) >= this.min && this.widthToValue(newBarValue) <= this.max) this.value = this.widthToValue(newBarValue)
   }
 
   valueToWidth = () =>{
