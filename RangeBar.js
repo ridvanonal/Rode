@@ -200,8 +200,8 @@ class rangeBar extends HTMLElement{
     if(!this.min) this.min=1
     if(!this.max) this.max=100
     if(!this.step) this.step=1
-    if(!this.value) this.value=this.min
     if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
+    if(!this.value) this.value=this.min
     else this.value=this.valueChecked(this.value)
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
