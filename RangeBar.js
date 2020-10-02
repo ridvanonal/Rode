@@ -42,13 +42,13 @@ rangeBarTemplate.innerHTML =
     background-color: rgba(174,174,178,0.5) !important;
   }
   :host([darkmode=false]) > div::after{
-    background-color:rgba(242,242,247,0.5) !important;
+    background-color:rgba(242,242,247,0.75) !important;
   }
   :host([darkmode=true]) > div{
     background-color: rgba(99,99,102,0.5) !important;
   }
   :host([darkmode=true]) > div::after{
-    background-color:rgba(28,28,30,0.5) !important;
+    background-color:rgba(28,28,30,0.75) !important;
   }
   :host([disabled]) > div{
     pointer-events: none !important;
@@ -106,7 +106,8 @@ class rangeBar extends HTMLElement{
   }
 
   set value(value){
-    this.setAttribute("value",this.valueChecked(value))
+    if(this.async) this.setAttribute("value",this.asyncValueCheck(value))
+    else this.setAttribute("value",this.syncValueCheck(value))
   }
 
   get darkMode(){
@@ -135,19 +136,20 @@ class rangeBar extends HTMLElement{
 
   get disabled(){
     return this.hasAttribute("disabled")
-  }
+  } 
 
   set disabled(bool){
     if(bool) this.setAttribute("disabled","")
     else this.removeAttribute("disabled")
   }
 
-  minCalculator = () => {
-    this.min = (this.step) * Math.ceil(this.min / this.step)
-  }
+  get async(){
+    return this.hasAttribute("async")
+  } 
 
-  maxCalculator = () => {
-    this.max = (this.step) * Math.floor(this.max / this.step)
+  set async(bool){
+    if(bool) this.setAttribute("async","")
+    else this.removeAttribute("async")
   }
 
   static get observedAttributes(){
@@ -157,7 +159,7 @@ class rangeBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected) this.onValueChanged()
+        if(this.isConnected) this.onValueChange()
         if(this.isConnected && this.name) this.querySelector("input").value = this.value
         if(this.isConnected && this.onChange) eval(this.onChange)
         if(this.isConnected && this.onValue && Number(this.onValue.split(",")[0]) == this.value) eval(this.onValue.split(",")[1])
@@ -169,58 +171,70 @@ class rangeBar extends HTMLElement{
   };
 
   onClick = (event) => {
-    let sheets = this.shadow.styleSheets[1]
-    let rules = sheets.cssRules || sheets.rules
-    let clickedPoint = (event.offsetX / (this.offsetWidth-10)) * 100
-    clickedPoint > 100 ? clickedPoint=100 : null
-    clickedPoint < 0 ? clickedPoint=0 : null
-    let divider = 100 / ((this.max - this.min) / this.step)
-    let newBarValue = divider * Math.round(clickedPoint / divider)
-    rules[0].style.width = `${newBarValue}%`
-    if(this.widthToValue(newBarValue) >= this.min && this.widthToValue(newBarValue) <= this.max) this.value = this.widthToValue(newBarValue)
+    this.value = this.min + this.step*this.piece(event.offsetX+5)
+  }
+
+  shred = () =>{
+    return Math.floor((this.max - this.min) / this.step)
+  }
+
+  piece = (clickX) =>{
+    return Math.round(0+(this.shred()-0)*(clickX-0)/(this.offsetWidth-0))
+  }
+
+  syncMaxCalculator = () =>{
+    this.max = (this.step) * Math.floor(this.max / this.step)
+  }
+
+  syncMinCalculator = () =>{
+    this.min = (this.step) * Math.ceil(this.min / this.step)
+  }
+
+  asyncMaxCalculator = () => {
+    this.max = this.min + (this.step*this.shred())
   }
 
   valueToWidth = () =>{
     return this.step*((0+(100-0)*(this.value-this.min)/(this.max-this.min))/this.step)
   }
-
-  widthToValue = (width) =>{
-    return this.step*Math.round((this.min+(this.max-this.min)*(width-0)/(100-0))/this.step)
-  }
-
-  onValueChanged = () => {
+  
+  onValueChange = () => {
       let sheets = this.shadow.styleSheets[1]
       let rules = sheets.cssRules || sheets.rules
       rules[0].style.width = `${this.valueToWidth()}%` 
   }
 
-  valueChecked = (value) => {
+  syncValueCheck = (value) => {
     if(value <= this.max && value >= this.min && value % this.step==0) return value
     else return this.min 
   }
 
+  asyncValueCheck = (value) =>{
+    if(value <= this.max && value >= this.min && (value-this.min) % this.step == 0) return value
+    else return this.min
+  }
+
   onScroll = (event) => {
-    let sheets = this.shadow.styleSheets[1]
-    let rules = sheets.cssRules || sheets.rules
-    if(event.wheelDelta < 0 && this.value!=this.min){
+    if(event.wheelDelta < 0 && this.value > this.min){
       this.value = this.value - this.step
     }
-    else if(event.wheelDelta>0 && this.value != this.max){
+    else if(event.wheelDelta>0 && this.value < this.max){
       this.value = this.value + this.step
     }
-    rules[0].style.width = `${this.valueToWidth()}%`
   }
 
   connectedCallback(){
-    this.minCalculator()
-    this.maxCalculator()
+    if(!this.async) this.syncMinCalculator()
+    if(!this.async) this.syncMaxCalculator()
+    else this.asyncMaxCalculator()
     if(!this.darkMode) this.darkMode = false   
     if(!this.min) this.min=1
     if(!this.max) this.max=100
     if(!this.step) this.step=1
     if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     if(!this.value) this.value=this.min
-    else this.value=this.valueChecked(this.value)
+    else if(this.value && !this.async) this.value=this.syncValueCheck(this.value)
+    else if(this.value && this.async) this.value=this.asyncValueCheck(this.value)
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
     bar.addEventListener("click",this.onClick.bind(this))
