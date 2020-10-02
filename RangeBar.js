@@ -54,7 +54,7 @@ rangeBarTemplate.innerHTML =
     pointer-events: none !important;
   }
   :host([disabled]) > div::after {
-    opacity:0.5;
+    opacity:0.5 !important;
   }
   </style>
 
