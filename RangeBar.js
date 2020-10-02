@@ -29,11 +29,14 @@ rangeBarTemplate.innerHTML =
     content: "";
     display: block;
     -webkit-transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                        background-color .2s linear;
+                        background-color .2s linear,
+                        opacity .2s linear;
     -ms-transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                    background-color .2s linear;
+                    background-color .2s linear,
+                    opacity .2s linear;
     transition: width .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                background-color .2s linear;
+                background-color .2s linear,
+                opacity .2s linear;
   }
   :host([darkmode=false]) > div{
     background-color: rgba(174,174,178,0.5) !important;
@@ -46,6 +49,12 @@ rangeBarTemplate.innerHTML =
   }
   :host([darkmode=true]) > div::after{
     background-color:rgba(28,28,30,0.5) !important;
+  }
+  :host([disabled]) > div{
+    pointer-events: none !important;
+  }
+  :host([disabled]) > div::after {
+    opacity:0.5;
   }
   </style>
 
@@ -122,6 +131,15 @@ class rangeBar extends HTMLElement{
 
   set onValue(event){
     this.setAttribute("onValue",event)
+  }
+
+  get disabled(){
+    return this.hasAttribute("disabled")
+  }
+
+  set disabled(bool){
+    if(bool) this.setAttribute("disabled","")
+    else this.removeAttribute("disabled")
   }
 
   minCalculator = () => {
