@@ -8,32 +8,35 @@ switchButtonTemplate.innerHTML =
     display:block;
   }
   :host div{
-    height: 24px !important;
-    width: 38px !important;
-    border-radius: 14px !important;
-    padding: 2px !important;
-    box-sizing: border-box !important;
-    -webkit-transition: background-color .2s linear !important;
-    -ms-transition: background-color .2s linear !important;
-    transition: background-color .2s linear !important;
-    cursor: pointer !important;
-    -webkit-touch-callout: none !important; 
-    -webkit-user-select: none !important;
-    -khtml-user-select: none !important; 
-    -moz-user-select: none !important; 
-    -ms-user-select: none !important; 
-    user-select: none !important;
+    height: 24px;
+    width: 38px;
+    border-radius: 14px;
+    padding: 2px;
+    box-sizing: border-box;
+    -webkit-transition: background-color .2s linear;
+    -ms-transition: background-color .2s linear;
+    transition: background-color .2s linear;
+    cursor: pointer;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
     backdrop-filter: blur(10px);
-    }
+  }
   :host div > div{
-    height: 20px !important;
-    width: 20px !important;
-    background-color: rgba(255,255,255,1) !important;
-    border-radius: 100% !important;
-    box-shadow: 0px 1px 3px rgba(0,0,0,0.15) !important;
-    -webkit-transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275) !important;
-    -ms-transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275) !important;
-    transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275) !important;
+    height: 20px;
+    width: 20px;
+    background-color: rgba(255,255,255,1) ;
+    border-radius: 100%;
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.15);
+    -webkit-transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275),
+                        opacity .2s linear;
+    -ms-transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275),
+                    opacity .2s linear;
+    transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275),
+                opacity .2s linear;
   }
   :host([darkmode=true]) > div{
     background-color: rgba(99,99,102,0.5) !important;
@@ -62,9 +65,8 @@ switchButtonTemplate.innerHTML =
   :host([disabled]) > div > div{
     opacity:0.5 !important;
   }
-
   </style>
-
+  
   <div><div></div></div>
   `
 class switchButton extends HTMLElement{
