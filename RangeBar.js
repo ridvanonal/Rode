@@ -171,7 +171,7 @@ class rangeBar extends HTMLElement{
   };
 
   onClick = (event) => {
-    this.value = this.min + this.step*this.piece(event.offsetX+5)
+    if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.piece(event.offsetX)
   }
 
   shred = () =>{
@@ -179,7 +179,7 @@ class rangeBar extends HTMLElement{
   }
 
   piece = (clickX) =>{
-    return Math.round(0+(this.shred()-0)*(clickX-0)/(this.offsetWidth-0))
+    return Math.round(0+(this.shred()-0)*(clickX-0)/((this.offsetWidth-10)-0))
   }
 
   syncMaxCalculator = () =>{
