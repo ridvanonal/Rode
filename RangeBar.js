@@ -215,10 +215,10 @@ class rangeBar extends HTMLElement{
   }
 
   onScroll = (event) => {
-    if(event.wheelDelta < 0 && this.value > this.min){
+    if(event.deltaY > 0 && this.value > this.min){
       this.value = this.value - this.step
     }
-    else if(event.wheelDelta>0 && this.value < this.max){
+    else if(event.deltaY < 0 && this.value < this.max){
       this.value = this.value + this.step
     }
   }
@@ -242,7 +242,7 @@ class rangeBar extends HTMLElement{
     bar.addEventListener("mousedown",()=>mousedown=true)
     bar.addEventListener("mouseup",()=>mousedown=false)
     bar.addEventListener("mouseout",()=>mousedown=false)
-    bar.addEventListener("mousewheel",this.onScroll.bind(this))
+    bar.addEventListener("wheel",this.onScroll.bind(this))
   }
 }
 
