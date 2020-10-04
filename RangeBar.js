@@ -168,7 +168,7 @@ class rangeBar extends HTMLElement{
         if(this.isConnected && this.name) this.querySelector("input").name = this.name
       break;
     }
-  };
+  }
 
   onClick = (event) => {
     if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.piece(event.offsetX)
