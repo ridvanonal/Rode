@@ -111,27 +111,27 @@ class rangeBar extends HTMLElement{
   }
 
   get darkMode(){
-    return this.getAttribute("darkMode")
+    return this.getAttribute("darkmode")
   }
 
   set darkMode(bool){
-    this.setAttribute("darkMode",bool)
+    this.setAttribute("darkmode",bool)
   }
 
   get onChange(){
-    return this.getAttribute("onChange")
+    return this.getAttribute("onchange")
   }
 
   set onChange(event){
-    this.setAttribute("onChange",event)
+    this.setAttribute("onchange",event)
   }
 
   get onValue(){
-    return this.getAttribute("onValue")
+    return this.getAttribute("onvalue")
   }
 
   set onValue(event){
-    this.setAttribute("onValue",event)
+    this.setAttribute("onvalue",event)
   }
 
   get disabled(){
