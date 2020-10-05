@@ -5,7 +5,6 @@ rangeBarTemplate.innerHTML =
   :host{
     display:block;
     height:50px;
-    width:300px;
   }
   :host > div{
     width:100%;
