@@ -93,11 +93,11 @@ class switchButton extends HTMLElement{
   }
 
   get darkMode(){
-    return this.getAttribute("darkMode")
+    return this.getAttribute("darkmode")
   }
 
   set darkMode(bool){
-    this.setAttribute("darkMode",bool)
+    this.setAttribute("darkmode",bool)
   }
 
   get disabled(){
@@ -110,23 +110,23 @@ class switchButton extends HTMLElement{
   }
 
   get onTrue(){
-    return this.getAttribute("onTrue")
+    return this.getAttribute("ontrue")
   }
 
   set onTrue(event){
-    this.setAttribute("onTrue",event)
+    this.setAttribute("ontrue",event)
   }
 
   get onFalse(){
-    return this.getAttribute("onFalse")
+    return this.getAttribute("onfalse")
   }
 
   set onFalse(event){
-    this.setAttribute("onFalse",event)
+    this.setAttribute("onfalse",event)
   }
 
   static get observedAttributes(){
-    return ["value","name","darkMode","disabled","onTrue","onFalse"]
+    return ["value","name","darkmode","disabled","ontrue","onfalse"]
   }
 
   attributeChangedCallback(attr,oldValue,newValue){
