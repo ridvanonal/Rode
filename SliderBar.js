@@ -1,5 +1,5 @@
-const rangeBarTemplate = document.createElement("template")
-rangeBarTemplate.innerHTML = 
+const sliderBarTemplate = document.createElement("template")
+sliderBarTemplate.innerHTML = 
   `
   <style>
   :host{
@@ -61,11 +61,11 @@ rangeBarTemplate.innerHTML =
   
   <div></div>
   `
-class rangeBar extends HTMLElement{
+class sliderBar extends HTMLElement{
   constructor(){
     super()
     this.shadow = this.attachShadow({mode:"closed"})
-    this.shadow.appendChild(rangeBarTemplate.content.cloneNode(true))
+    this.shadow.appendChild(sliderBarTemplate.content.cloneNode(true))
   }
 
   get name(){
@@ -245,4 +245,4 @@ class rangeBar extends HTMLElement{
   }
 }
 
-customElements.define("rode-rangebar",rangeBar)
+customElements.define("rode-sliderbar",sliderBar)
