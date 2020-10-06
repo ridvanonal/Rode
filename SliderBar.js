@@ -11,7 +11,7 @@ sliderBarTemplate.innerHTML =
     height:100%;
     border-radius:15px;
     overflow: hidden;
-    border: 0px solid transparent;
+    border: 2px solid transparent;
     box-sizing: border-box;
     -webkit-transition: border .09s linear,
                         background-color .2s linear ;
@@ -41,13 +41,13 @@ sliderBarTemplate.innerHTML =
     background-color: rgba(174,174,178,0.5) !important;
   }
   :host([darkmode=false]) > div::after{
-    background-color:rgba(242,242,247,0.75) !important;
+    background-color:rgba(242,242,247,0.9) !important;
   }
   :host([darkmode=true]) > div{
     background-color: rgba(99,99,102,0.5) !important;
   }
   :host([darkmode=true]) > div::after{
-    background-color:rgba(28,28,30,0.75) !important;
+    background-color:rgba(28,28,30,0.9) !important;
   }
   :host([disabled]) > div{
     pointer-events: none !important;
