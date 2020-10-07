@@ -223,13 +223,13 @@ class sliderBar extends HTMLElement{
   }
 
   connectedCallback(){
-    if(!this.async) this.syncMinCalculator()
-    if(!this.async) this.syncMaxCalculator()
-    else this.asyncMaxCalculator()
     if(!this.darkmode) this.darkmode = false   
     if(!this.min) this.min=0
     if(!this.max) this.max=100
     if(!this.step) this.step=1
+    if(!this.async) this.syncMinCalculator()
+    if(!this.async) this.syncMaxCalculator()
+    else this.asyncMaxCalculator()
     if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     if(!this.value) this.value=this.min
     else if(this.value && !this.async) this.value=this.syncValueCheck(this.value)
