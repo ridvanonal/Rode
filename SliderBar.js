@@ -109,27 +109,27 @@ class sliderBar extends HTMLElement{
     else this.setAttribute("value",this.syncValueCheck(value))
   }
 
-  get darkMode(){
+  get darkmode(){
     return this.getAttribute("darkmode")
   }
 
-  set darkMode(bool){
+  set darkmode(bool){
     this.setAttribute("darkmode",bool)
   }
 
-  get onChange(){
+  get onchange(){
     return this.getAttribute("onchange")
   }
 
-  set onChange(event){
+  set onchange(event){
     this.setAttribute("onchange",event)
   }
 
-  get onValue(){
+  get onvalue(){
     return this.getAttribute("onvalue")
   }
 
-  set onValue(event){
+  set onvalue(event){
     this.setAttribute("onvalue",event)
   }
 
@@ -160,8 +160,8 @@ class sliderBar extends HTMLElement{
       case 'value':
         if(this.isConnected) this.onValueChange()
         if(this.isConnected && this.name) this.querySelector("input").value = this.value
-        if(this.isConnected && this.onChange) eval(this.onChange)
-        if(this.isConnected && this.onValue && Number(this.onValue.split(",")[0]) == this.value) eval(this.onValue.split(",")[1])
+        if(this.isConnected && this.onchange) eval(this.onchange)
+        if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
       break;
       case 'name':
         if(this.isConnected && this.name) this.querySelector("input").name = this.name
@@ -226,7 +226,7 @@ class sliderBar extends HTMLElement{
     if(!this.async) this.syncMinCalculator()
     if(!this.async) this.syncMaxCalculator()
     else this.asyncMaxCalculator()
-    if(!this.darkMode) this.darkMode = false   
+    if(!this.darkmode) this.darkmode = false   
     if(!this.min) this.min=1
     if(!this.max) this.max=100
     if(!this.step) this.step=1
