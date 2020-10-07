@@ -97,7 +97,7 @@ class sliderBar extends HTMLElement{
   }
 
   set step(stepValue){
-    this.setAttribute("step",stepValue)
+    this.setAttribute("step",stepValue != 0 ? stepValue : 1)
   }
 
   get value(){
@@ -227,7 +227,7 @@ class sliderBar extends HTMLElement{
     if(!this.async) this.syncMaxCalculator()
     else this.asyncMaxCalculator()
     if(!this.darkmode) this.darkmode = false   
-    if(!this.min) this.min=1
+    if(!this.min) this.min=0
     if(!this.max) this.max=100
     if(!this.step) this.step=1
     if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
