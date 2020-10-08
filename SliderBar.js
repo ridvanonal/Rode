@@ -97,7 +97,7 @@ class sliderBar extends HTMLElement{
   }
 
   set step(stepValue){
-    this.setAttribute("step",stepValue != 0 ? stepValue : 1)
+    this.setAttribute("step",this.stepCheck(stepValue))
   }
 
   get value(){
@@ -169,7 +169,7 @@ class sliderBar extends HTMLElement{
     }
   }
 
-  onClick = (event) => {
+  onClick = (event) =>{
     if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.piece(event.offsetX)
   }
 
@@ -189,7 +189,7 @@ class sliderBar extends HTMLElement{
     this.min = (this.step) * Math.ceil(this.min / this.step)
   }
 
-  asyncMaxCalculator = () => {
+  asyncMaxCalculator = () =>{
     this.max = this.min + (this.step*this.shred())
   }
 
@@ -197,13 +197,13 @@ class sliderBar extends HTMLElement{
     return this.step*((0+(100-0)*(this.value-this.min)/(this.max-this.min))/this.step)
   }
   
-  onValueChange = () => {
+  onValueChange = () =>{
       let sheets = this.shadow.styleSheets[1]
       let rules = sheets.cssRules || sheets.rules
       rules[0].style.width = `${this.valueToWidth()}%` 
   }
 
-  syncValueCheck = (value) => {
+  syncValueCheck = (value) =>{
     if(value <= this.max && value >= this.min && value % this.step==0) return value
     else return this.min 
   }
@@ -211,6 +211,11 @@ class sliderBar extends HTMLElement{
   asyncValueCheck = (value) =>{
     if(value <= this.max && value >= this.min && (value-this.min) % this.step == 0) return value
     else return this.min
+  }
+
+  stepCheck = (step) =>{
+    if(step <= 0) return 1
+    else return step
   }
 
   onScroll = (event) => {
@@ -227,6 +232,7 @@ class sliderBar extends HTMLElement{
     if(!this.min) this.min=0
     if(!this.max) this.max=100
     if(!this.step) this.step=1
+    if(this.step) this.step = this.stepCheck(this.step)
     if(!this.async) this.syncMinCalculator()
     if(!this.async) this.syncMaxCalculator()
     else this.asyncMaxCalculator()
