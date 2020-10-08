@@ -5,13 +5,11 @@ progressBarTemplate.innerHTML =
   :host {
     display:block;
     height:15px;
-    width:300px;
   }
   :host > div{
     width:100%;
     height:100%;
     box-sizing: border-box;
-    border: 2px solid transparent;
     border-radius: 15px;
     overflow: hidden;
     backdrop-filter: blur(10px);
@@ -26,13 +24,13 @@ progressBarTemplate.innerHTML =
     background-color: rgba(174,174,178,0.5) !important;
   }
   :host([darkmode=false]) > div::after{
-    background-color:rgba(0,122,255,1) !important;
+    background-color:rgba(0,122,255,0.9) !important;
   }
   :host([darkmode=true]) > div{
     background-color: rgba(99,99,102,0.5) !important;
   }
   :host([darkmode=true]) > div::after{
-    background-color:rgba(10,132,255,1) !important;
+    background-color:rgba(10,132,255,0.9) !important;
   }
   </style>
   <style> :host > div::after{ width:0% } </style>
