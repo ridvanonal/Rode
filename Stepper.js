@@ -124,6 +124,14 @@ class stepper extends HTMLElement{
     this.setAttribute("onchange",event)
   }
 
+  get onvalue(){
+    return this.getAttribute("onvalue")
+  }
+
+  set onvalue(event){
+    this.setAttribute("onvalue",event)
+  }
+
   static get observedAttributes(){
     return ["value"]
   }
@@ -132,6 +140,7 @@ class stepper extends HTMLElement{
     switch (attr) {
       case "value":
         if(this.isConnected && this.onchange) eval(this.onchange.replace(`()`,`(${this.value})`))
+        if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
       break;
     }
   }
