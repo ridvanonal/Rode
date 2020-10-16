@@ -10,7 +10,6 @@ class counter extends HTMLElement{
     super()
     this.shadow = this.attachShadow({mode:"closed"})
     this.shadow.appendChild(counterTemplate.content.cloneNode(true))
-    this.countStep = 0
     this.longSetTimeOut
     this.longSetInterval
   }
@@ -61,20 +60,14 @@ class counter extends HTMLElement{
 
   add = () =>{
     if(this.max)
-    if(this.value < this.max ) this.countStep ++
-    if(!this.max) this.countStep++
-    this.valueCalculator()
+    if(this.value < this.max ) this.value += this.step
+    if(!this.max) this.value += this.step
   }
 
   subtract = () =>{
     if(this.min)
-    if(this.value > this.min) this.countStep --
-    if(!this.min) this.countStep --
-    this.valueCalculator()
-  }
-
-  valueCalculator = () =>{
-    this.value = Number(this.min) + this.countStep * this.step 
+    if(this.value > this.min) this.value -= this.step
+    if(!this.min) this.value -= this.step
   }
 
   maxCalculator = () =>{
@@ -112,7 +105,7 @@ class counter extends HTMLElement{
   connectedCallback(){
     if(this.max) this.maxCalculator()
     if(!this.step) this.step = 1
-    if(!this.value) this.valueCalculator()
+    if(!this.value) this.value = this.min ? this.min : 0
     let addButton = this.shadow.querySelector(":host>button:nth-of-type(2)")
     let subtractButton = this.shadow.querySelector(":host>button:nth-of-type(1)")
     let input = this.shadow.querySelector(":host>input")
