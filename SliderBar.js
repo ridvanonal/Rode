@@ -41,7 +41,7 @@ sliderBarTemplate.innerHTML =
     background-color: rgba(174,174,178,0.5) !important;
   }
   :host([darkmode=false]) > div::after{
-    background-color:rgba(242,242,247,0.9) !important;
+    background-color:rgba(255,255,255,0.9) !important;
   }
   :host([darkmode=true]) > div{
     background-color: rgba(99,99,102,0.5) !important;
@@ -160,7 +160,7 @@ class sliderBar extends HTMLElement{
       case 'value':
         if(this.isConnected) this.onValueChange()
         if(this.isConnected && this.name) this.querySelector("input").value = this.value
-        if(this.isConnected && this.onchange) eval(this.onchange)
+        if(this.isConnected && this.onchange) eval(this.onchange.replace(`()`,`(${this.value})`))
         if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
       break;
       case 'name':
