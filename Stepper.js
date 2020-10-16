@@ -1,9 +1,59 @@
 const counterTemplate = document.createElement("template")
 counterTemplate.innerHTML = 
 `
-<button>-</button>
-<input type="text">
-<button>+</button>
+<style>
+  :host{
+    display:inline-block;
+  }
+  :host > div{
+    height:30px;
+    width:100px;
+    min-width:100px;
+    background-color:red;
+    border-radius:15px;
+    backdrop-filter:blur(10px);
+    padding:2px;
+    box-sizing:border-box;
+    display:flex;
+  }
+  :host([darkmode=true]) > div{
+    background-color: rgba(99,99,102,0.5) !important;
+  }  
+  :host([darkmode=false]) > div{
+    background-color: rgba(174,174,178,0.5) !important;
+  }
+  :host > div > button{
+    width:22px;
+    border:0px;
+    height:22px;
+    padding:0px;
+    display:block;
+    outline:none;
+    position:absolute;
+    border-radius:100%;
+    top:4px;
+    cursor:pointer;
+  }
+  :host > div > button:nth-of-type(1){ left:4px; }
+  :host > div > button:nth-of-type(2){ right:4px; }
+  :host > div > input{
+    height:100%;
+    border:0px;
+    box-sizing:border-box;
+    padding:0px 28px;
+    outline:none;
+    display:block;
+    text-align:center;
+    width:100%;
+    border-radius:13px;
+  }
+  </style>
+
+  <div>
+    <button>-</button>
+    <input type="text" readonly>
+    <button>+</button>
+  <div>
 `
 class counter extends HTMLElement{
   constructor(){
@@ -46,6 +96,14 @@ class counter extends HTMLElement{
     this.setAttribute("max",max)
   }
 
+  get darkmode(){
+    return this.getAttribute("darkmode")
+  }
+
+  set darkmode(bool){
+    this.setAttribute("darkmode",bool)
+  }
+
   static get observedAttributes(){
     return ["value"]
   }
@@ -75,7 +133,7 @@ class counter extends HTMLElement{
   }
 
   valueChange = () =>{
-    this.shadow.querySelector(":host>input").value = this.value
+    this.shadow.querySelector(":host>div>input").value = this.value
   }
 
   onKeyPress = (event) =>{
@@ -106,9 +164,10 @@ class counter extends HTMLElement{
     if(this.max) this.maxCalculator()
     if(!this.step) this.step = 1
     if(!this.value) this.value = this.min ? this.min : 0
-    let addButton = this.shadow.querySelector(":host>button:nth-of-type(2)")
-    let subtractButton = this.shadow.querySelector(":host>button:nth-of-type(1)")
-    let input = this.shadow.querySelector(":host>input")
+    if(!this.darkmode) this.darkmode = false
+    let addButton = this.shadow.querySelector(":host>div>button:nth-of-type(2)")
+    let subtractButton = this.shadow.querySelector(":host>div>button:nth-of-type(1)")
+    let input = this.shadow.querySelector(":host>div>input")
     addButton.addEventListener("click",this.add)
     addButton.addEventListener("mousedown",()=>this.onLongPressDown("add"))
     addButton.addEventListener("mouseup",this.onLongPressUp)
