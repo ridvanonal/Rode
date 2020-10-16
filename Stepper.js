@@ -139,8 +139,8 @@ class stepper extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
       case "value":
-        if(this.isConnected && this.onchange) eval(this.onchange.replace(`()`,`(${this.value})`))
-        if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
+        if(this.isConnected && this.onchange) try{eval(this.onchange.replace(`()`,`(${this.value})`))}catch{}
+        if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) try{eval(this.onvalue.split(",")[1])}catch{}
       break;
     }
   }
