@@ -2,6 +2,9 @@ const circleProgressTemplate = document.createElement("template")
 circleProgressTemplate.innerHTML = 
   `
   <style>
+  :host{
+    display:inline-block;
+  }
   :host > div{
     border-radius: 100%;
     display: flex;
@@ -46,11 +49,11 @@ circleProgressTemplate.innerHTML =
   }
   </style>
 
-  <style> :host > div { width:100px ; height:100px } </style>
-
-  <style> :host > div > svg > circle:nth-of-type(2) { stroke-dasharray: 282.7433388230814; }  </style>
-
-  <style> :host > div > svg > circle:nth-of-type(2) { stroke-dashoffset: 282.7433388230814; }  </style>
+  <style> 
+  :host > div {}
+  :host > div > svg > circle:nth-of-type(2) {}
+  :host > div > svg > circle:nth-of-type(2) {}  
+  </style>
 
   <div><svg><circle></circle><circle></circle></svg></div>
   `
@@ -97,11 +100,15 @@ class circleProgress extends HTMLElement{
     }
   }
 
-  circleDraw = () =>{
+  getRules = () => {
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
-    rules[0].style.width = `${this.width ? this.width : 100}px`
-    rules[0].style.height =  `${this.width ? this.width : 100}px`
+    return rules
+  }
+
+  circleDraw = () =>{
+    this.getRules()[0].style.width = `${this.width ? this.width : 100}px`
+    this.getRules()[0].style.height =  `${this.width ? this.width : 100}px`
     let circleOne = this.shadow.querySelector(":host>div>svg>circle:nth-of-type(1)")
     let circleTwo = this.shadow.querySelector(":host>div>svg>circle:nth-of-type(2)")
     circleOne.setAttribute("cx",this.width ? (this.width-10) /2 : 45)
@@ -120,15 +127,11 @@ class circleProgress extends HTMLElement{
   }
 
   setStrokedasharray = () => {
-    let sheets = this.shadow.styleSheets[2]
-    let rules = sheets.cssRules || sheets.rules
-    rules[0].style.strokeDasharray = this.getCircumference()
+    this.getRules()[1].style.strokeDasharray = this.getCircumference()
   }
 
   setPercentage(percent){
-    let sheets = this.shadow.styleSheets[3]
-    let rules = sheets.cssRules || sheets.rules
-    rules[0].style.strokeDashoffset = this.getCircumference() - (percent / 100) * this.getCircumference()
+    this.getRules()[2].style.strokeDashoffset = this.getCircumference() - (percent / 100) * this.getCircumference()
   }
 
   percentCheck = (percent) => {
@@ -136,7 +139,7 @@ class circleProgress extends HTMLElement{
   }
 
   connectedCallback(){
-    if(!this.percent) this.percent=0
+    if(!this.percent) this.percent = 0
     else this.percent = this.percentCheck(this.percent)
     this.circleDraw()
     this.setStrokedasharray()
