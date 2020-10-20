@@ -77,6 +77,26 @@ class circleProgress extends HTMLElement{
     this.setAttribute("darkmode",bool)
   }
 
+  get percent(){
+    return this.getAttribute("percent")
+  }
+
+  set percent(percent){
+    this.setAttribute("percent", this.percentCheck(percent))
+  }
+
+  static get observedAttributes(){
+    return ["percent"]
+  }
+
+  attributeChangedCallback(attr,oldValue,newValue){
+    switch (attr) {
+      case "percent":
+        if(this.isConnected) this.setPercentage(newValue)
+      break;
+    }
+  }
+
   circleDraw = () =>{
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
@@ -111,11 +131,18 @@ class circleProgress extends HTMLElement{
     rules[0].style.strokeDashoffset = this.getCircumference() - (percent / 100) * this.getCircumference()
   }
 
+  percentCheck = (percent) => {
+    return Math.min(Math.max(percent,0),100)
+  }
+
   connectedCallback(){
+    if(!this.percent) this.percent=0
+    else this.percent = this.percentCheck(this.percent)
     this.circleDraw()
     this.setStrokedasharray()
-    this.setPercentage()
+    this.setPercentage(this.percent)
     if(!this.darkmode) this.darkmode = false
   }
 }
+
 customElements.define("rode-circleprogress",circleProgress)
