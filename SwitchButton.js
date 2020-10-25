@@ -7,7 +7,7 @@ switchButtonTemplate.innerHTML =
     height:24px;
     display:block;
   }
-  :host div{
+  :host > div{
     height: 24px;
     width: 38px;
     border-radius: 14px;
@@ -25,7 +25,9 @@ switchButtonTemplate.innerHTML =
     user-select: none;
     backdrop-filter: blur(10px);
   }
-  :host div > div{
+  :host > div::after{
+    content:"";
+    display:block;
     height: 20px;
     width: 20px;
     background-color: rgba(255,255,255,1) ;
@@ -50,7 +52,7 @@ switchButtonTemplate.innerHTML =
   :host([darkmode=false][value=true]) > div{
     background-color: rgba(59,199,89,1) !important;
   }  
-  :host([value=true]) > div > div{
+  :host([value=true]) > div::after{
     margin-left: 14px !important;
   } 
   :host([disabled]) > div{
@@ -62,12 +64,12 @@ switchButtonTemplate.innerHTML =
   :host([darkmode=false][value=true][disabled]) > div{
     background-color: rgba(59,199,89,0.75) !important;
   }  
-  :host([disabled]) > div > div{
+  :host([disabled]) > div::after{
     opacity:0.5 !important;
   }
   </style>
   
-  <div><div></div></div>
+  <div></div>
   `
 class switchButton extends HTMLElement{
   constructor(){
@@ -153,12 +155,12 @@ class switchButton extends HTMLElement{
     switch(attr){
       case 'value':
         if(this.isConnected && this.hasName) this.querySelector("input").value = this.value
-        if(this.isConnected && this.hasOntrue && newValue == "true") eval(this.ontrue)
-        if(this.isConnected && this.hasOnFalse && newValue == "false") eval(this.onfalse)
-      break;
+        if(this.isConnected && this.hasOntrue && newValue == "true") try{eval(this.ontrue)}catch{console.log("%c onTrue : Function Error","color:rgb(255,59,48);font-weight:bold")}
+        if(this.isConnected && this.hasOnFalse && newValue == "false") try{eval(this.onfalse)}catch{console.log("%c onFalse : Function Error","color:rgb(255,59,48);font-weight:bold")}
+      break
       case 'name':
         if(this.isConnected && this.hasName) this.querySelector("input").name = this.name
-      break;
+      break
     }
   }
 
@@ -167,7 +169,7 @@ class switchButton extends HTMLElement{
     else if(this.value == "false") this.value = "true"
   }
   
-  connectedCallback(){    
+  connectedCallback(){   
     if(this.hasName) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     if(!this.hasValue) this.value = false
     if(!this.hasDarkMode) this.darkmode = false
