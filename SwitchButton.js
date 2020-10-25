@@ -79,6 +79,10 @@ class switchButton extends HTMLElement{
   get value(){
     return this.getAttribute("value")
   }
+  
+  get hasValue(){
+    return this.hasAttribute("value")
+  }
 
   set value(bool){
     this.setAttribute("value",bool)
@@ -87,6 +91,10 @@ class switchButton extends HTMLElement{
   get name(){
     return this.getAttribute("name")
   }
+  
+  get hasName(){
+    return this.hasAttribute("name")
+  }
 
   set name(name){
     this.setAttribute("name",name)
@@ -94,6 +102,10 @@ class switchButton extends HTMLElement{
 
   get darkmode(){
     return this.getAttribute("darkmode")
+  }
+
+  get hasDarkMode(){
+    return this.hasAttribute("dakmode")
   }
 
   set darkmode(bool){
@@ -113,12 +125,20 @@ class switchButton extends HTMLElement{
     return this.getAttribute("ontrue")
   }
 
+  get hasOntrue(){
+    return this.hasAttribute("ontrue")
+  }
+
   set ontrue(event){
     this.setAttribute("ontrue",event)
   }
 
   get onfalse(){
     return this.getAttribute("onfalse")
+  }
+
+  get hasOnFalse(){
+    return this.hasAttribute("onfalse")
   }
 
   set onfalse(event){
@@ -132,27 +152,26 @@ class switchButton extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected && this.name) this.querySelector("input").value = this.value
-        if(this.isConnected && this.ontrue && newValue == "true") eval(this.ontrue)
-        if(this.isConnected && this.onfalse && newValue == "false") eval(this.onfalse)
+        if(this.isConnected && this.hasName) this.querySelector("input").value = this.value
+        if(this.isConnected && this.hasOntrue && newValue == "true") eval(this.ontrue)
+        if(this.isConnected && this.hasOnFalse && newValue == "false") eval(this.onfalse)
       break;
       case 'name':
-        if(this.isConnected && this.name) this.querySelector("input").name = this.name
+        if(this.isConnected && this.hasName) this.querySelector("input").name = this.name
       break;
     }
   }
 
-  onClick = () => {
+  #onClick = () => {
     if(this.value == "true") this.value = "false"
     else if(this.value == "false") this.value = "true"
-    if(this.name) this.querySelector("input").value = this.value
   }
-
+  
   connectedCallback(){    
-    if(!this.value) this.value = false
-    if(!this.darkmode) this.darkmode = false
-    if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
-    this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
+    if(this.hasName) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
+    if(!this.hasValue) this.value = false
+    if(!this.hasDarkMode) this.darkmode = false
+    this.selector.querySelector(":host>div").addEventListener("click",this.#onClick.bind(this))
   }
 }
 customElements.define("rode-switchbutton",switchButton)
