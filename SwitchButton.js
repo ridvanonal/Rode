@@ -176,4 +176,5 @@ class switchButton extends HTMLElement{
     this.selector.querySelector(":host>div").addEventListener("click",this.#onClick.bind(this))
   }
 }
+
 customElements.define("rode-switchbutton",switchButton)
