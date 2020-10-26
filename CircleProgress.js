@@ -42,10 +42,10 @@ circleProgressTemplate.innerHTML =
     stroke: rgba(255,255,255,0.1);
   }
   :host([darkmode=false]) > div > svg > circle:nth-of-type(2) {
-    stroke: rgb(52,199,89);
+    stroke: rgba(255,255,255,0.9);
   }
   :host([darkmode=true]) > div > svg > circle:nth-of-type(2) {
-    stroke: rgb(48,209,88);
+    stroke: rgba(28,28,30,0.9);
   }
   </style>
 
@@ -68,12 +68,20 @@ class circleProgress extends HTMLElement{
     return this.getAttribute("width")
   }
 
+  get hasWidth(){
+    return this.hasAttribute("width")
+  }
+
   set width(width){
     this.setAttribute("width",width)
   }
 
   get darkmode(){
     return this.getAttribute("darkmode")
+  }
+
+  get hasDarkmode(){
+    return this.hasAttribute("darkmode")
   }
 
   set darkmode(bool){
@@ -84,8 +92,12 @@ class circleProgress extends HTMLElement{
     return this.getAttribute("percent")
   }
 
+  get hasPercent(){
+    return this.hasAttribute("percent")
+  }
+
   set percent(percent){
-    this.setAttribute("percent", this.percentCheck(percent))
+    this.setAttribute("percent", this.#percentCheck(percent))
   }
 
   static get observedAttributes(){
@@ -95,56 +107,56 @@ class circleProgress extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
       case "percent":
-        if(this.isConnected) this.setPercentage(newValue)
-      break;
+        if(this.isConnected) this.#setPercentage(newValue)
+      break
     }
   }
 
-  getRules = () => {
+  #getRules = () => {
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     return rules
   }
 
-  circleDraw = () =>{
-    this.getRules()[0].style.width = `${this.width ? this.width : 100}px`
-    this.getRules()[0].style.height =  `${this.width ? this.width : 100}px`
+  #circleDraw = () =>{
+    this.#getRules()[0].style.width = `${this.width ? this.width : 100}px`
+    this.#getRules()[0].style.height =  `${this.width ? this.width : 100}px`
     let circleOne = this.shadow.querySelector(":host>div>svg>circle:nth-of-type(1)")
     let circleTwo = this.shadow.querySelector(":host>div>svg>circle:nth-of-type(2)")
-    circleOne.setAttribute("cx",this.width ? (this.width-10) /2 : 45)
-    circleOne.setAttribute("cy",this.width ? (this.width-10) /2 : 45)
-    circleOne.setAttribute("r",this.width ? (this.width-10) /2 - 5 : 40)
-    circleTwo.setAttribute("cx",this.width ? (this.width-10) /2 : 45)
-    circleTwo.setAttribute("cy",this.width ? (this.width-10) /2 : 45)
-    circleTwo.setAttribute("r",this.width ? (this.width-10) /2 - 5 : 40)
+    circleOne.setAttribute("cx",this.hasWidth ? (this.width-10) / 2 : 45)
+    circleOne.setAttribute("cy",this.hasWidth ? (this.width-10) / 2 : 45)
+    circleOne.setAttribute("r",this.hasWidth ? (this.width-10) / 2 - 5 : 40)
+    circleTwo.setAttribute("cx",this.hasWidth ? (this.width-10) / 2 : 45)
+    circleTwo.setAttribute("cy",this.hasWidth ? (this.width-10) / 2 : 45)
+    circleTwo.setAttribute("r",this.hasWidth ? (this.width-10) / 2 - 5 : 40)
   }
 
-  getCircumference = () =>{
+  #getCircumference = () =>{
     let circle = this.shadow.querySelector(":host>div>svg>circle:nth-of-type(2)")
     let radius = circle.r.baseVal.value
     let circumference = radius * 2 * Math.PI
     return circumference
   }
 
-  setStrokedasharray = () => {
-    this.getRules()[1].style.strokeDasharray = this.getCircumference()
+  #setStrokedasharray = () => {
+    this.#getRules()[1].style.strokeDasharray = this.#getCircumference()
   }
 
-  setPercentage(percent){
-    this.getRules()[2].style.strokeDashoffset = this.getCircumference() - (percent / 100) * this.getCircumference()
+  #setPercentage = (percent) => {
+    this.#getRules()[2].style.strokeDashoffset = this.#getCircumference() - (percent / 100) * this.#getCircumference()
   }
 
-  percentCheck = (percent) => {
+  #percentCheck = (percent) => {
     return Math.min(Math.max(percent,0),100)
   }
 
   connectedCallback(){
-    if(!this.percent) this.percent = 0
-    else this.percent = this.percentCheck(this.percent)
-    this.circleDraw()
-    this.setStrokedasharray()
-    this.setPercentage(this.percent)
-    if(!this.darkmode) this.darkmode = false
+    if(!this.hasPercent) this.percent = 0
+    else this.percent = this.#percentCheck(this.percent)
+    this.#circleDraw()
+    this.#setStrokedasharray()
+    this.#setPercentage(this.percent)
+    if(!this.hasDarkmode) this.darkmode = false
   }
 }
 
