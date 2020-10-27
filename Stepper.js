@@ -185,11 +185,11 @@ class stepper extends HTMLElement{
     if(!this.hasMin) this.value -= this.step
   }
 
-  maxCalculator = () =>{
+  #maxCalculator = () =>{
     this.max = this.min + (this.step*(Math.floor((this.max - this.min) / this.step)))
   }
 
-  onLongPressDown = (type) =>{
+  #onLongPressDown = (type) =>{
     this.longSetTimeOut = setTimeout(()=>{
       if(type=="add") this.longSetInterval = setInterval(()=>{this.add()},150)
       if(type=="subtract") this.longSetInterval = setInterval(()=>{this.subtract()},150)
@@ -197,26 +197,26 @@ class stepper extends HTMLElement{
     return false
   }
 
-  onLongPressUp = () =>{
+  #onLongPressUp = () =>{
     clearTimeout(this.longSetTimeOut)
     clearInterval(this.longSetInterval)
   }
 
   connectedCallback(){
     if(!this.hasStep) this.step = 1
-    if(this.hasMax) this.maxCalculator()
+    if(this.hasMax) this.#maxCalculator()
     if(!this.hasValue) this.value = this.min ? this.min : 0
     if(!this.hasDarkmode) this.darkmode = false
     let addButton = this.shadow.querySelector(":host>div>div:nth-of-type(1)")
     let subtractButton = this.shadow.querySelector(":host>div>div:nth-of-type(2)") 
     addButton.addEventListener("click",this.add)
-    addButton.addEventListener("mousedown",()=>this.onLongPressDown("add"))
-    addButton.addEventListener("mouseup",this.onLongPressUp)
-    addButton.addEventListener("mouseleave",this.onLongPressUp)
+    addButton.addEventListener("mousedown",()=>this.#onLongPressDown("add"))
+    addButton.addEventListener("mouseup",this.#onLongPressUp)
+    addButton.addEventListener("mouseleave",this.#onLongPressUp)
     subtractButton.addEventListener("click",this.subtract)
-    subtractButton.addEventListener("mousedown",()=>this.onLongPressDown("subtract"))
-    subtractButton.addEventListener("mouseup",this.onLongPressUp)
-    subtractButton.addEventListener("mouseleave",this.onLongPressUp)
+    subtractButton.addEventListener("mousedown",()=>this.#onLongPressDown("subtract"))
+    subtractButton.addEventListener("mouseup",this.#onLongPressUp)
+    subtractButton.addEventListener("mouseleave",this.#onLongPressUp)
   }
 
 }
