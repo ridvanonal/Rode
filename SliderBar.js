@@ -72,12 +72,20 @@ class sliderBar extends HTMLElement{
     return this.getAttribute("name")
   }
 
+  get hasName(){
+    return this.hasAttribute("name")
+  }
+
   set name(name){
     this.setAttribute("name",name)
   }
 
   get min(){
     return Number(this.getAttribute("min"))
+  }
+
+  get hasMin(){
+    return this.hasAttribute("min")
   }
 
   set min(minValue){
@@ -88,6 +96,10 @@ class sliderBar extends HTMLElement{
     return Number(this.getAttribute("max"))
   }
 
+  get hasMax(){
+    return this.hasAttribute("max")
+  }
+
   set max(maxValue){
     this.setAttribute("max",maxValue)
   }
@@ -96,21 +108,33 @@ class sliderBar extends HTMLElement{
     return Number(this.getAttribute("step"))
   }
 
+  get hasStep(){
+    return this.hasAttribute("step")
+  }
+
   set step(stepValue){
-    this.setAttribute("step",this.stepCheck(stepValue))
+    this.setAttribute("step",this.#stepCheck(stepValue))
   }
 
   get value(){
     return Number(this.getAttribute("value"))
   }
 
+  get hasValue(){
+    return this.hasAttribute("value")
+  }
+
   set value(value){
-    if(this.async) this.setAttribute("value",this.asyncValueCheck(value))
-    else this.setAttribute("value",this.syncValueCheck(value))
+    if(this.async) this.setAttribute("value",this.#asyncValueCheck(value))
+    else this.setAttribute("value",this.#syncValueCheck(value))
   }
 
   get darkmode(){
     return this.getAttribute("darkmode")
+  }
+
+  get hasDarkmode(){
+    return this.hasAttribute("darkmode")
   }
 
   set darkmode(bool){
@@ -121,12 +145,20 @@ class sliderBar extends HTMLElement{
     return this.getAttribute("onchange")
   }
 
+  get hasOnchange(){
+    return this.hasAttribute("onchange")
+  }
+
   set onchange(event){
     this.setAttribute("onchange",event)
   }
 
   get onvalue(){
     return this.getAttribute("onvalue")
+  }
+
+  get hasOnvalue(){
+    return this.hasAttribute("onvalue")
   }
 
   set onvalue(event){
@@ -158,67 +190,67 @@ class sliderBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected) this.onValueChange()
-        if(this.isConnected && this.name) this.querySelector("input").value = this.value
-        if(this.isConnected && this.onchange) eval(this.onchange.replace(`()`,`(${this.value})`))
-        if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
+        if(this.isConnected) this.#onValueChange()
+        if(this.isConnected && this.hasName) this.querySelector("input").value = this.value
+        if(this.isConnected && this.hasOnchange) eval(this.onchange.replace(`()`,`(${this.value})`))
+        if(this.isConnected && this.hasOnvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
       break;
       case 'name':
-        if(this.isConnected && this.name) this.querySelector("input").name = this.name
+        if(this.isConnected && this.hasName) this.querySelector("input").name = this.name
       break;
     }
   }
 
-  onClick = (event) =>{
-    if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.piece(event.offsetX)
+  #onClick = (event) =>{
+    if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.#piece(event.offsetX)
   }
 
-  shred = () =>{
+  #shred = () =>{
     return Math.floor((this.max - this.min) / this.step)
   }
 
-  piece = (clickX) =>{
-    return Math.round(0+(this.shred()-0)*(clickX-0)/((this.offsetWidth-10)-0))
+  #piece = (clickX) =>{
+    return Math.round(0+(this.#shred()-0)*(clickX-0)/((this.offsetWidth-10)-0))
   }
 
-  syncMaxCalculator = () =>{
+  #syncMaxCalculator = () =>{
     this.max = (this.step) * Math.floor(this.max / this.step)
   }
 
-  syncMinCalculator = () =>{
+  #syncMinCalculator = () =>{
     this.min = (this.step) * Math.ceil(this.min / this.step)
   }
 
-  asyncMaxCalculator = () =>{
-    this.max = this.min + (this.step*this.shred())
+  #asyncMaxCalculator = () =>{
+    this.max = this.min + (this.step*this.#shred())
   }
 
-  valueToWidth = () =>{
+  #valueToWidth = () =>{
     return this.step*((0+(100-0)*(this.value-this.min)/(this.max-this.min))/this.step)
   }
   
-  onValueChange = () =>{
+  #onValueChange = () =>{
       let sheets = this.shadow.styleSheets[1]
       let rules = sheets.cssRules || sheets.rules
-      rules[0].style.width = `${this.valueToWidth()}%` 
+      rules[0].style.width = `${this.#valueToWidth()}%` 
   }
 
-  syncValueCheck = (value) =>{
+  #syncValueCheck = (value) =>{
     if(value <= this.max && value >= this.min && value % this.step==0) return value
     else return this.min 
   }
 
-  asyncValueCheck = (value) =>{
+  #asyncValueCheck = (value) =>{
     if(value <= this.max && value >= this.min && (value-this.min) % this.step == 0) return value
     else return this.min
   }
 
-  stepCheck = (step) =>{
+  #stepCheck = (step) =>{
     if(step <= 0) return 1
     else return step
   }
 
-  onScroll = (event) => {
+  #onScroll = (event) => {
     if(event.deltaY > 0 && this.value > this.min){
       this.value = this.value - this.step
     }
@@ -228,27 +260,29 @@ class sliderBar extends HTMLElement{
   }
 
   connectedCallback(){
-    if(!this.darkmode) this.darkmode = false   
-    if(!this.min) this.min=0
-    if(!this.max) this.max=100
-    if(!this.step) this.step=1
-    if(this.step) this.step = this.stepCheck(this.step)
-    if(!this.async) this.syncMinCalculator()
-    if(!this.async) this.syncMaxCalculator()
-    else this.asyncMaxCalculator()
-    if(this.name) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
-    if(!this.value) this.value=this.min
-    else if(this.value && !this.async) this.value=this.syncValueCheck(this.value)
-    else if(this.value && this.async) this.value=this.asyncValueCheck(this.value)
+    if(!this.hasDarkmode) this.darkmode = false   
+    if(!this.hasMin) this.min=0
+    if(!this.hasMax) this.max=100
+    if(!this.hasStep) this.step=1
+    if(this.hasStep) this.step = this.#stepCheck(this.step)
+    if(!this.async) this.#syncMinCalculator()
+    if(!this.async) this.#syncMaxCalculator()
+    else this.#asyncMaxCalculator()
+    if(this.hasName) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
+    if(!this.hasValue) this.value=this.min
+    else if(this.hasValue && !this.async) this.value=this.#syncValueCheck(this.value)
+    else if(this.hasValue && this.async) this.value=this.#asyncValueCheck(this.value)
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
-    bar.addEventListener("click",this.onClick.bind(this))
-    bar.addEventListener("mousemove",(event) => mousedown && this.onClick(event))
+    bar.addEventListener("click",this.#onClick.bind(this))
+    bar.addEventListener("mousemove",(event) => mousedown && this.#onClick(event))
     bar.addEventListener("mousedown",()=>mousedown=true)
     bar.addEventListener("mouseup",()=>mousedown=false)
     bar.addEventListener("mouseout",()=>mousedown=false)
-    bar.addEventListener("wheel",this.onScroll.bind(this))
+    bar.addEventListener("wheel",this.#onScroll.bind(this))
   }
 }
+
+sliderBar.prototype.rode = true
 
 customElements.define("rode-sliderbar",sliderBar)
