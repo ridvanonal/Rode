@@ -80,6 +80,10 @@ class stepper extends HTMLElement{
     return Number(this.getAttribute("value"))
   }
 
+  get hasValue(){
+    return this.hasAttribute("value")
+  }
+
   set value(value){
     this.setAttribute("value",value)
   }
@@ -88,12 +92,20 @@ class stepper extends HTMLElement{
     return Number(this.getAttribute("step"))
   }
 
+  get hasStep(){
+    return this.hasAttribute("step")
+  }
+
   set step(step){
     this.setAttribute("step",step)
   }
 
   get min(){
-    return this.getAttribute("min")
+    return Number(this.getAttribute("min"))
+  }
+
+  get hasMin(){
+    return this.hasAttribute("min")
   }
 
   set min(min){
@@ -101,7 +113,11 @@ class stepper extends HTMLElement{
   }
 
   get max(){
-    return this.getAttribute("max")
+    return Number(this.getAttribute("max"))
+  }
+
+  get hasMax(){
+    return this.hasAttribute("max")
   }
 
   set max(max){
@@ -112,6 +128,10 @@ class stepper extends HTMLElement{
     return this.getAttribute("darkmode")
   }
 
+  get hasDarkmode(){
+    return this.hasAttribute("darkmode")
+  }
+
   set darkmode(bool){
     this.setAttribute("darkmode",bool)
   }
@@ -120,12 +140,20 @@ class stepper extends HTMLElement{
     return this.getAttribute("onchange")
   }
 
+  get hasOnchange(){
+    return this.hasAttribute("onchange")
+  }
+
   set onchange(event){
     this.setAttribute("onchange",event)
   }
 
   get onvalue(){
     return this.getAttribute("onvalue")
+  }
+
+  get hasOnvalue(){
+    return this.hasAttribute("onvalue")
   }
 
   set onvalue(event){
@@ -139,26 +167,26 @@ class stepper extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
       case "value":
-        if(this.isConnected && this.onchange) try{eval(this.onchange.replace(`()`,`(${this.value})`))}catch{}
-        if(this.isConnected && this.onvalue && Number(this.onvalue.split(",")[0]) == this.value) try{eval(this.onvalue.split(",")[1])}catch{}
+        if(this.isConnected && this.hasOnchange) try{eval(this.onchange.replace(`()`,`(${this.value})`))}catch{}
+        if(this.isConnected && this.hasOnvalue && Number(this.onvalue.split(",")[0]) == this.value) try{eval(this.onvalue.split(",")[1])}catch{}
       break;
     }
   }
 
   add = () =>{
-    if(this.max)
+    if(this.hasMax)
     if(this.value < this.max ) this.value += this.step
-    if(!this.max) this.value += this.step
+    if(!this.hasMax) this.value += this.step
   }
 
   subtract = () =>{
-    if(this.min)
+    if(this.hasMin)
     if(this.value > this.min) this.value -= this.step
-    if(!this.min) this.value -= this.step
+    if(!this.hasMin) this.value -= this.step
   }
 
   maxCalculator = () =>{
-    this.max = Number(this.min) + (this.step*(Math.floor((this.max - Number(this.min)) / this.step)))
+    this.max = this.min + (this.step*(Math.floor((this.max - this.min) / this.step)))
   }
 
   onLongPressDown = (type) =>{
@@ -175,10 +203,10 @@ class stepper extends HTMLElement{
   }
 
   connectedCallback(){
-    if(this.max) this.maxCalculator()
-    if(!this.step) this.step = 1
-    if(!this.value) this.value = this.min ? this.min : 0
-    if(!this.darkmode) this.darkmode = false
+    if(!this.hasStep) this.step = 1
+    if(this.hasMax) this.maxCalculator()
+    if(!this.hasValue) this.value = this.min ? this.min : 0
+    if(!this.hasDarkmode) this.darkmode = false
     let addButton = this.shadow.querySelector(":host>div>div:nth-of-type(1)")
     let subtractButton = this.shadow.querySelector(":host>div>div:nth-of-type(2)") 
     addButton.addEventListener("click",this.add)
@@ -192,5 +220,7 @@ class stepper extends HTMLElement{
   }
 
 }
+
+stepper.prototype.rode = true
 
 customElements.define("rode-stepper",stepper)
