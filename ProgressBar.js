@@ -13,6 +13,9 @@ progressBarTemplate.innerHTML =
     border-radius: 15px;
     overflow: hidden;
     backdrop-filter: blur(10px);
+    -webkit-transition: background-color .2s linear;
+    -ms-transition: background-color .2s linear;
+    transition: background-color .2s linear;
   }
   :host > div::after{
     content: "";
@@ -48,6 +51,10 @@ class progressBar extends HTMLElement{
     return this.getAttribute("darkmode")
   }
 
+  get hasDarkmode(){
+    return this.hasAttribute("darkmode")
+  }
+
   set darkmode(bool){
     this.setAttribute("darkmode",bool)
   }
@@ -56,8 +63,12 @@ class progressBar extends HTMLElement{
     return Number(this.getAttribute("value"))
   }
 
+  get hasValue(){
+    return this.hasAttribute("value")
+  }
+
   set value(value){
-    this.setAttribute("value",this.valueCheck(value))
+    this.setAttribute("value",this.#valueCheck(value))
   }
 
   static get observedAttributes(){
@@ -67,29 +78,29 @@ class progressBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected) this.onValueChange()
+        if(this.isConnected) this.#onValueChange()
       break;
     }
   }
 
-  onValueChange = () => {
+  #onValueChange = () => {
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     rules[0].style.width = `${this.value}%` 
   }
 
-  valueCheck = (value) => {
+  #valueCheck = (value) => {
     if(!Number.isInteger(value)) return 0
-    else if(value > 100) return 100
-    else if(value < 0) return 0
-    else return value
+    return Math.min(Math.max(value,0),100)
   }
 
   connectedCallback(){
-    if(!this.darkmode) this.darkmode = false
-    if(!this.value) this.value = 0
-    this.onValueChange()
+    if(!this.hasDarkmode) this.darkmode = false
+    if(!this.hasValue) this.value = 0
+    this.#onValueChange()
   }
 }
+
+progressBar.prototype.rode = true
 
 customElements.define("rode-progressbar",progressBar)
