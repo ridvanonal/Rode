@@ -160,4 +160,6 @@ class circleProgress extends HTMLElement{
   }
 }
 
+circleProgress.prototype.rode = true
+
 customElements.define("rode-circleprogress",circleProgress)
