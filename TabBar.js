@@ -10,13 +10,23 @@ tabBarTemplate.innerHTML =
     -moz-user-select: none; 
     -ms-user-select: none; 
     user-select: none;
+    display:flex;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:14px;
   }
   :host > div{
     border-radius: 10px;
-    background-color: rgba(240,240,240,1);
     padding: 3px;
     box-sizing: border-box;
     position: relative;
+    transition: background-color .2s linear;
+  }
+  :host([darkmode=false]) > div {
+    background-color: rgba(242,242,247,1);
+  }
+  :host([darkmode=true]) > div {
+    background-color: rgba(28,28,30,1);
   }
   :host > div > div:nth-of-type(1){
     border-radius: 7px;
@@ -26,7 +36,14 @@ tabBarTemplate.innerHTML =
     z-index: 0;
     box-shadow: 0px 1px 3px rgba(0,0,0,0.15);
     transition: margin-left .2s linear,
-                width .2s linear;
+                width .2s linear,
+                background-color .2s linear;
+  }
+  :host([darkmode=false])> div > div:nth-of-type(1){
+    background-color:rgba(255,255,255,1);
+  }
+  :host([darkmode=true])> div > div:nth-of-type(1){
+    background-color:rgba(99,99,102,1);
   }
   :host > div > div:nth-of-type(2){
     position: relative;
@@ -36,11 +53,19 @@ tabBarTemplate.innerHTML =
   :host > div > div:nth-of-type(2) > div{
     padding: 5px 10px;
     white-space: nowrap;
-    color: rgba(0,0,0,0.5);
     transition: color .2s linear;
   }
-  :host > div > div:nth-of-type(2) > div[rode-selected]{
+  :host([darkmode=false]) > div > div:nth-of-type(2) > div{
+    color: rgba(0,0,0,0.5);
+  }
+  :host([darkmode=false]) > div > div:nth-of-type(2) > div[rode-selected]{
     color:rgba(0,0,0,1);
+  }
+  :host([darkmode=true]) > div > div:nth-of-type(2) > div{
+    color: rgba(255,255,255,0.5);
+  }
+  :host([darkmode=true]) > div > div:nth-of-type(2) > div[rode-selected]{
+    color:rgba(255,255,255,1);
   }
 </style>
 
@@ -97,7 +122,17 @@ class tabBar extends HTMLElement{
     return ["selectedtab"]
   }
 
+  get darkmode(){
+    return this.getAttribute("darkmode")
+  }
 
+  get hasDarkmode(){
+    return this.hasAttribute("darkmode")
+  }
+
+  set darkmode(bool){
+    this.setAttribute("darkmode",bool)
+  }
 
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
@@ -120,7 +155,7 @@ class tabBar extends HTMLElement{
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     const arrSum = arr => arr.reduce((a,b) => a + b, 0)
-    rules[1].style.width = Math.ceil(arrSum(this.itemWidths) +6) + "px"
+    rules[1].style.width = arrSum(this.itemWidths) + 6 + "px"
   }
 
   #onClick = (event) =>{
@@ -151,7 +186,10 @@ class tabBar extends HTMLElement{
     this.#itemCalculator()
     this.#setContainerWidth()
     if(!this.hasSelectedtab) this.selectedtab = 0
+    if(!this.hasDarkmode) this.darkmode = false
   }
 }
+
+tabBar.prototype.rode = true
 
 customElements.define("rode-tabbar",tabBar)
