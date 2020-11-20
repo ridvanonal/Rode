@@ -101,6 +101,6 @@ class progressBar extends HTMLElement{
   }
 }
 
-progressBar.prototype.rode = true
+progressBar.prototype.darkswitcher = true
 
-customElements.define("rode-progressbar",progressBar)
+customElements.define("ro-progressbar",progressBar)
