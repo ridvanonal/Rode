@@ -160,6 +160,6 @@ class circleProgress extends HTMLElement{
   }
 }
 
-circleProgress.prototype.rode = true
+circleProgress.prototype.darkswitcher = true
 
-customElements.define("rode-circleprogress",circleProgress)
+customElements.define("ro-circleprogress",circleProgress)
