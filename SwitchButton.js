@@ -177,6 +177,6 @@ class switchButton extends HTMLElement{
   }
 }
 
-switchButton.prototype.rode = true
+switchButton.prototype.darkswitcher = true
 
-customElements.define("rode-switchbutton",switchButton)
+customElements.define("ro-switchbutton",switchButton)
