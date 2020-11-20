@@ -221,6 +221,6 @@ class stepper extends HTMLElement{
 
 }
 
-stepper.prototype.rode = true
+stepper.prototype.darkswitcher = true
 
-customElements.define("rode-stepper",stepper)
+customElements.define("ro-stepper",stepper)
