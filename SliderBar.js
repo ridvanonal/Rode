@@ -283,6 +283,6 @@ class sliderBar extends HTMLElement{
   }
 }
 
-sliderBar.prototype.rode = true
+sliderBar.prototype.darkswitcher = true
 
-customElements.define("rode-sliderbar",sliderBar)
+customElements.define("ro-sliderbar",sliderBar)
