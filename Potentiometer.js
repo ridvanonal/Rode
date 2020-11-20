@@ -8,7 +8,6 @@ potentiometerTemplate.innerHTML =
 :host > div{
   height: 220px;
   width: 220px;
-  background-color: rgba(174,174,178,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,18 +16,31 @@ potentiometerTemplate.innerHTML =
   border-radius: 100%;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
+  transition: background-color 0.2s linear;
+}
+:host([darkmode=false]) > div{
+  background-color: rgba(174,174,178,0.5);
+}
+:host([darkmode=true]) > div{
+  background-color: rgba(99,99,102,0.5);
 }
 :host > div > div:nth-of-type(1){
-  background-color: rgba(255, 255, 255, 1);
   border-radius: 100%;
   position: absolute;
   display: flex;
   justify-content: center;
+  transition: background-color 0.2s linear;
+}
+:host([darkmode=false]) > div > div:nth-of-type(1){
+  background-color: rgba(255, 255, 255, 1);
+}
+:host([darkmode=true]) > div > div:nth-of-type(1){
+  background-color: rgba(28, 28, 30, 1);
 }
 :host > div > div:nth-of-type(1)::after{
   content: "";
   display: block;
-  background-color: rgba(255,255,255,1);
+  transition: background-color 0.2s linear;
   width: 10px;
   height: 10px;
   position: absolute;
@@ -36,16 +48,28 @@ potentiometerTemplate.innerHTML =
   transform: rotateZ(45deg);
   border-radius: 2px;
 }
+:host([darkmode=false]) > div > div:nth-of-type(1)::after{
+  background-color: rgba(255, 255, 255, 1);
+}
+:host([darkmode=true]) > div > div:nth-of-type(1)::after{
+  background-color: rgba(28, 28, 30, 1);
+}
 :host > div > div:nth-of-type(1)::before{
   content: "";
   display: block;
   height: 16px;
   width: 4px;
-  background-color: white;
+  transition: background-color 0.2s linear;
   position: absolute;
   top: -28px;
   border-radius: 4px;
   box-shadow:0px 0px 2px 0px rgba(0,0,0,0.1);
+}
+:host([darkmode=false]) > div > div:nth-of-type(1)::before{
+  background-color: rgba(255, 255, 255, 1);
+}
+:host([darkmode=true]) > div > div:nth-of-type(1)::before{
+  background-color: rgba(28, 28, 30, 1);
 }
 :host > div > svg{
   height:210px;
@@ -56,9 +80,15 @@ potentiometerTemplate.innerHTML =
 }
 :host > div > svg > circle{
   stroke-width: 20;
-  stroke: rgba(255,255,255,0.5);
   stroke-linecap: round;
   fill:transparent;
+  transition: stroke 0.2s linear;
+}
+:host([darkmode=false]) > div > svg > circle{
+  stroke: rgba(0,0,0,0.1);
+}
+:host([darkmode=true]) > div > svg > circle{
+  stroke: rgba(255,255,255,0.3);
 }
 :host > div > div:nth-of-type(3){
   position: absolute;
@@ -68,6 +98,13 @@ potentiometerTemplate.innerHTML =
 :host > div > div:nth-of-type(2){
   position: absolute;
   border-radius: 100%;
+  transition: background-color 0.2s linear;
+}
+:host([darkmode=false]) > div > div:nth-of-type(2){
+  background-color: rgba(242, 242, 247, 1);
+}
+:host([darkmode=true]) > div > div:nth-of-type(2){
+  background-color: rgba(44, 44, 46, 1);
 }
 </style>
 <style>
@@ -111,6 +148,18 @@ class potentiometer extends HTMLElement{
     this.setAttribute("percent",percent)
   }
 
+  get darkmode(){
+    return this.getAttribute("darkmode")
+  }
+
+  get hasDarkmode(){
+    return this.hasAttribute("darkmode")
+  }
+
+  set darkmode(bool){
+    this.setAttribute("darkmode",bool)
+  }
+
   #widthCheck = (width) => {
     return Math.min(Math.max(width,100),500)
   }
@@ -145,7 +194,6 @@ class potentiometer extends HTMLElement{
 
     this.#getRules()[5].style.width = `${this.width/2-30}px`
     this.#getRules()[5].style.height = `${this.width/2-30}px`
-    this.#getRules()[5].style.boxShadow = `0px 0px ${Math.round(this.width/10)}px -${Math.round(this.width/20)}px rgba(0,0,0,0.5)`
   }
 
   static get observedAttributes(){
@@ -190,6 +238,7 @@ class potentiometer extends HTMLElement{
   }
 
   connectedCallback(){
+    if(!this.darkmode) this.darkmode = false
     this.width = this.#widthCheck(this.width)
     if(!this.percent) this.percent = (0).toFixed(2)
     else this.#percentToAngle()
