@@ -190,6 +190,6 @@ class tabBar extends HTMLElement{
   }
 }
 
-tabBar.prototype.rode = true
+tabBar.prototype.darkswitcher = true
 
-customElements.define("rode-tabbar",tabBar)
+customElements.define("ro-tabbar",tabBar)
