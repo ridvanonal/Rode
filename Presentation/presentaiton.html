@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RO | Web Components</title>
+    <script src="/ProgressBar.js"></script>
+    <script src="/SliderBar.js"></script>
+    <script src="/Stepper.js"></script>
+    <script src="/SwitchButton.js"></script>
+    <script src="/CircleProgress.js"></script>
+    <script src="/TabBar.js"></script>
+    <script src="/Potentiometer.js"></script>
+    <script src="/RoFunctions.js"></script>
+    <style>
+        body{
+            padding: 0px;
+            margin:0px
+        }
+        #ro_logo{
+            width: 300px;
+            background-color: rgba(255,255,255,1);
+            padding: 15px;
+            border-radius: 15px;
+            margin:0px 0px 20px 20px;
+        }
+        #ro_logo:hover{
+            background-color: rgba(247,247,252,1);
+        }
+        .main_cont{
+            width: 1000px;
+            height: auto;
+            margin: auto;
+            padding: 20px;
+        }
+        .cont{
+            border-radius: 15px;
+            background-color: rgba(255,255,255,1);
+            box-shadow: 0px 3px 15px -5px rgba(0,0,0,0.2);
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction:column;
+            height: auto;
+        }
+        .sb{
+            min-width: 150px;
+        }
+        .rb{
+            margin-left:20px;
+            width: 100%;
+        }
+        .rb  ro-sliderbar{
+            width: 100%;
+        }
+        .pb {
+            width: 100%;
+        }
+        .pb  ro-progressbar{
+            width: 100%;
+        }
+        .s {
+            height: 100px;
+            min-width: 100px;
+            margin-left: 20px;
+        }
+        .cp{
+            min-width: 120px;
+        }
+        .tb{
+            width: 100%;
+        }
+        .p{
+            min-width: 120px;
+            margin-left: 20px;
+        }
+        .line{
+            width: 100%;
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .header{
+            margin-bottom: 5px;
+            font-weight: bold;
+            width: 100%;
+            min-height: 25px;
+            text-align: center;
+            line-height: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+        .content{
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main_cont">
+      <img id="ro_logo" src="RO | Web Component Logo.svg">
+        <div class="line">
+            <div class="cont sb">
+                <div class="header">Switch Button</div>
+                <div class="content">
+                    <ro-switchbutton class="item" ontrue="deneme()"></ro-switchbutton>
+                </div>
+            </div>
+            <div class="cont s">
+                <div class="header">Stepper</div>
+                <div class="content">
+                    <ro-stepper min="10" max="120" class="item"></ro-stepper>
+                </div>
+            </div>
+            <div class="cont rb">
+                <div class="header">Range Bar</div>
+                <div class="content">
+                  <ro-sliderbar min="5" max="100" step="3" class="item" async></ro-sliderbar>
+                </div>
+            </div>
+        </div>
+        <div class="line">
+            <div class="cont pb">
+              <div class="header">Progress Bar</div>
+              <div class="content">
+                <ro-progressbar value="20"></ro-progressbar>
+              </div>
+            </div>
+        </div>
+        <div class="line">
+            <div class="cont tb">
+                <div class="header">Tab Menu</div>
+                <div class="content">
+                  <ro-tabbar items="Tab 1;Tab 2;Tab 3;Tab 4;Tab 5;Tab 6;Tab 7;Tab 8;Tab 9;Tab;Tab 10"></ro-tabbar>
+                </div>
+            </div>
+        </div>
+        <div class="line">
+            <div class="cont cp">
+              <div class="header">Circle Percent</div>
+                <div class="content">
+                  <ro-circleprogress percent="0" class="item"></ro-circleprogress>
+                </div>
+            </div>
+            <div class="cont p">
+              <div class="header">Potantiometer</div>
+                <div class="content">
+                <ro-potentiometer></ro-potentiometer>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function deneme(){
+            
+        }
+    </script>
+</body>
+</html>
