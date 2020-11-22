@@ -44,7 +44,7 @@ potentiometerTemplate.innerHTML =
   width: 10px;
   height: 10px;
   position: absolute;
-  top: -3px;
+  top: -2px;
   transform: rotateZ(45deg);
   border-radius: 2px;
 }
@@ -98,13 +98,19 @@ potentiometerTemplate.innerHTML =
 :host > div > div:nth-of-type(2){
   position: absolute;
   border-radius: 100%;
-  transition: background-color 0.2s linear;
+  box-sizing:border-box;
+  transition: background-color 0.2s linear,
+              border 0.2s linear;
+  border-style : solid;
 }
 :host([darkmode=false]) > div > div:nth-of-type(2){
-  background-color: rgba(242, 242, 247, 1);
+  background-color: rgba(242, 242, 242, 1);
+  border-color : rgba(222, 222, 222, 1);
 }
 :host([darkmode=true]) > div > div:nth-of-type(2){
-  background-color: rgba(44, 44, 46, 1);
+  background-color: rgba(64, 64, 64, 1);
+  border-color : rgba(84, 84, 84, 1);
+  
 }
 </style>
 <style>
@@ -136,16 +142,16 @@ class potentiometer extends HTMLElement{
     this.setAttribute("width",width)
   }
 
-  get percent(){
-    return this.getAttribute("percent")
+  get value(){
+    return this.getAttribute("value")
   }
 
-  get hasPercent(){
-    return this.hasAttribute("percent")
+  get hasValue(){
+    return this.hasAttribute("value")
   }
 
-  set percent(percent){
-    this.setAttribute("percent",percent)
+  set value(value){
+    this.setAttribute("value",value)
   }
 
   get darkmode(){
@@ -194,15 +200,16 @@ class potentiometer extends HTMLElement{
 
     this.#getRules()[5].style.width = `${this.width/2-30}px`
     this.#getRules()[5].style.height = `${this.width/2-30}px`
+    this.#getRules()[5].style.borderWidth = `${this.width*2/100}px`
   }
 
   static get observedAttributes(){
-    return ["percent"]
+    return ["value"]
   }
 
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
-      case "percent":
+      case "value":
         if(this.isConnected) this.#percentToAngle()
       break;
     }
@@ -213,7 +220,7 @@ class potentiometer extends HTMLElement{
   }
 
   #percentToAngle = () => {
-    this.#getRules()[1].style.transform = `rotateZ(${(0+(300-0)*(this.percent-0)/(100-0))-150}deg)`
+    this.#getRules()[1].style.transform = `rotateZ(${(0+(300-0)*(this.value-0)/(100-0))-150}deg)`
   }
 
   #getPos = (e) =>{
@@ -234,13 +241,13 @@ class potentiometer extends HTMLElement{
     if(angle+150<0) angle = -150
     if(angle+150>300) angle = 150
 
-    this.percent = this.#angleToPercent(angle+150)
+    this.value = this.#angleToPercent(angle+150)
   }
 
   connectedCallback(){
     if(!this.darkmode) this.darkmode = false
     this.width = this.#widthCheck(this.width)
-    if(!this.percent) this.percent = (0).toFixed(2)
+    if(!this.hasValue) this.value = (0).toFixed(2)
     else this.#percentToAngle()
     this.#shapeCalculator()
     let area = this.shadow.querySelector(":host>div>div:nth-of-type(3)")
