@@ -137,32 +137,32 @@ class tabBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
       case "selectedtab":
-        if(this.isConnected) this.#moveSelected()
+        if(this.isConnected) this.moveSelected()
       break;
     }
   }
 
-  #itemCalculator = () =>{
+  itemCalculator = () =>{
     this.itemList = this.shadow.querySelectorAll(":host>div>div:nth-of-type(2)>div")
     Array.from(this.itemList).forEach(item => {
-      item.addEventListener("click",this.#onClick.bind(this))
+      item.addEventListener("click",this.onClick.bind(this))
       this.itemWidths.push(item.getBoundingClientRect().width)
       this.itemLefts.push(item.offsetLeft)
     })
   }
 
-  #setContainerWidth = () =>{
+  setContainerWidth = () =>{
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     const arrSum = arr => arr.reduce((a,b) => a + b, 0)
     rules[1].style.width = arrSum(this.itemWidths) + 6 + "px"
   }
 
-  #onClick = (event) =>{
+  onClick = (event) =>{
     this.selectedtab = Array.from(this.itemList).indexOf(event.target)
   }
 
-  #moveSelected = () =>{
+  moveSelected = () =>{
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     Array.from(this.itemList).forEach(item=>item.removeAttribute("rode-selected"))
@@ -171,7 +171,7 @@ class tabBar extends HTMLElement{
     rules[0].style.marginLeft = this.itemLefts[this.selectedtab] + "px"
   }
 
-  #tabAdd = () =>{
+  tabAdd = () =>{
     let itemContainer = this.shadow.querySelector(":host>div>div:nth-of-type(2)")
     let itemName = this.items.split(";")
     itemName.forEach(item=>{
@@ -182,9 +182,9 @@ class tabBar extends HTMLElement{
   }
 
   connectedCallback(){
-    if(this.hasItems) this.#tabAdd()
-    this.#itemCalculator()
-    this.#setContainerWidth()
+    if(this.hasItems) this.tabAdd()
+    this.itemCalculator()
+    this.setContainerWidth()
     if(!this.hasSelectedtab) this.selectedtab = 0
     if(!this.hasDarkmode) this.darkmode = false
   }
