@@ -113,7 +113,7 @@ class sliderBar extends HTMLElement{
   }
 
   set step(stepValue){
-    this.setAttribute("step",this.#stepCheck(stepValue))
+    this.setAttribute("step",this.stepCheck(stepValue))
   }
 
   get value(){
@@ -125,8 +125,8 @@ class sliderBar extends HTMLElement{
   }
 
   set value(value){
-    if(this.async) this.setAttribute("value",this.#asyncValueCheck(value))
-    else this.setAttribute("value",this.#syncValueCheck(value))
+    if(this.async) this.setAttribute("value",this.asyncValueCheck(value))
+    else this.setAttribute("value",this.syncValueCheck(value))
   }
 
   get darkmode(){
@@ -190,7 +190,7 @@ class sliderBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected) this.#onValueChange()
+        if(this.isConnected) this.onValueChange()
         if(this.isConnected && this.hasName) this.querySelector("input").value = this.value
         if(this.isConnected && this.hasOnchange) eval(this.onchange.replace(`()`,`(${this.value})`))
         if(this.isConnected && this.hasOnvalue && Number(this.onvalue.split(",")[0]) == this.value) eval(this.onvalue.split(",")[1])
@@ -201,56 +201,56 @@ class sliderBar extends HTMLElement{
     }
   }
 
-  #onClick = (event) =>{
-    if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.#piece(event.offsetX)
+  onClick = (event) =>{
+    if(event.offsetX<=this.offsetWidth-10) this.value = this.min + this.step*this.piece(event.offsetX)
   }
 
-  #shred = () =>{
+  shred = () =>{
     return Math.floor((this.max - this.min) / this.step)
   }
 
-  #piece = (clickX) =>{
-    return Math.round(0+(this.#shred()-0)*(clickX-0)/((this.offsetWidth-10)-0))
+  piece = (clickX) =>{
+    return Math.round(0+(this.shred()-0)*(clickX-0)/((this.offsetWidth-10)-0))
   }
 
-  #syncMaxCalculator = () =>{
+  syncMaxCalculator = () =>{
     this.max = (this.step) * Math.floor(this.max / this.step)
   }
 
-  #syncMinCalculator = () =>{
+  syncMinCalculator = () =>{
     this.min = (this.step) * Math.ceil(this.min / this.step)
   }
 
-  #asyncMaxCalculator = () =>{
-    this.max = this.min + (this.step*this.#shred())
+  asyncMaxCalculator = () =>{
+    this.max = this.min + (this.step*this.shred())
   }
 
-  #valueToWidth = () =>{
+  valueToWidth = () =>{
     return this.step*((0+(100-0)*(this.value-this.min)/(this.max-this.min))/this.step)
   }
   
-  #onValueChange = () =>{
+  onValueChange = () =>{
       let sheets = this.shadow.styleSheets[1]
       let rules = sheets.cssRules || sheets.rules
-      rules[0].style.width = `${this.#valueToWidth()}%` 
+      rules[0].style.width = `${this.valueToWidth()}%` 
   }
 
-  #syncValueCheck = (value) =>{
+  syncValueCheck = (value) =>{
     if(value <= this.max && value >= this.min && value % this.step==0) return value
     else return this.min 
   }
 
-  #asyncValueCheck = (value) =>{
+  asyncValueCheck = (value) =>{
     if(value <= this.max && value >= this.min && (value-this.min) % this.step == 0) return value
     else return this.min
   }
 
-  #stepCheck = (step) =>{
+  stepCheck = (step) =>{
     if(step <= 0) return 1
     else return step
   }
 
-  #onScroll = (event) => {
+  onScroll = (event) => {
     if(event.deltaY > 0 && this.value > this.min){
       this.value = this.value - this.step
     }
@@ -264,22 +264,22 @@ class sliderBar extends HTMLElement{
     if(!this.hasMin) this.min=0
     if(!this.hasMax) this.max=100
     if(!this.hasStep) this.step=1
-    if(this.hasStep) this.step = this.#stepCheck(this.step)
-    if(!this.async) this.#syncMinCalculator()
-    if(!this.async) this.#syncMaxCalculator()
-    else this.#asyncMaxCalculator()
+    if(this.hasStep) this.step = this.stepCheck(this.step)
+    if(!this.async) this.syncMinCalculator()
+    if(!this.async) this.syncMaxCalculator()
+    else this.asyncMaxCalculator()
     if(this.hasName) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     if(!this.hasValue) this.value=this.min
-    else if(this.hasValue && !this.async) this.value=this.#syncValueCheck(this.value)
-    else if(this.hasValue && this.async) this.value=this.#asyncValueCheck(this.value)
+    else if(this.hasValue && !this.async) this.value=this.syncValueCheck(this.value)
+    else if(this.hasValue && this.async) this.value=this.asyncValueCheck(this.value)
     let bar = this.shadow.querySelector(":host>div")
     let mousedown = false
-    bar.addEventListener("click",this.#onClick.bind(this))
-    bar.addEventListener("mousemove",(event) => mousedown && this.#onClick(event))
+    bar.addEventListener("click",this.onClick.bind(this))
+    bar.addEventListener("mousemove",(event) => mousedown && this.onClick(event))
     bar.addEventListener("mousedown",()=>mousedown=true)
     bar.addEventListener("mouseup",()=>mousedown=false)
     bar.addEventListener("mouseout",()=>mousedown=false)
-    bar.addEventListener("wheel",this.#onScroll.bind(this))
+    bar.addEventListener("wheel",this.onScroll.bind(this))
   }
 }
 
