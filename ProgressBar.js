@@ -68,7 +68,7 @@ class progressBar extends HTMLElement{
   }
 
   set value(value){
-    this.setAttribute("value",this.#valueCheck(value))
+    this.setAttribute("value",this.valueCheck(value))
   }
 
   static get observedAttributes(){
@@ -78,18 +78,18 @@ class progressBar extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected) this.#onValueChange()
+        if(this.isConnected) this.onValueChange()
       break;
     }
   }
 
-  #onValueChange = () => {
+  onValueChange = () => {
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     rules[0].style.width = `${this.value}%` 
   }
 
-  #valueCheck = (value) => {
+  valueCheck = (value) => {
     if(!Number.isInteger(value)) return 0
     return Math.min(Math.max(value,0),100)
   }
@@ -97,7 +97,7 @@ class progressBar extends HTMLElement{
   connectedCallback(){
     if(!this.hasDarkmode) this.darkmode = false
     if(!this.hasValue) this.value = 0
-    this.#onValueChange()
+    this.onValueChange()
   }
 }
 
