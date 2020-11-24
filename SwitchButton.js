@@ -164,7 +164,7 @@ class switchButton extends HTMLElement{
     }
   }
 
-  #onClick = () => {
+  onClick = () => {
     if(this.value == "true") this.value = "false"
     else if(this.value == "false") this.value = "true"
   }
@@ -173,7 +173,7 @@ class switchButton extends HTMLElement{
     if(this.hasName) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
     if(!this.hasValue) this.value = false
     if(!this.hasDarkmode) this.darkmode = false
-    this.selector.querySelector(":host>div").addEventListener("click",this.#onClick.bind(this))
+    this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
   }
 }
 
