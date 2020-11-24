@@ -166,25 +166,25 @@ class potentiometer extends HTMLElement{
     this.setAttribute("darkmode",bool)
   }
 
-  #widthCheck = (width) => {
+  widthCheck = (width) => {
     return Math.min(Math.max(width,100),500)
   }
 
-  #getRules = () =>{
+  getRules = () =>{
     let sheets = this.shadow.styleSheets[1]
     let rules = sheets.cssRules || sheets.rules
     return rules
   }
 
-  #shapeCalculator = () => {
-    this.#getRules()[0].style.width = `${this.width}px`
-    this.#getRules()[0].style.height = `${this.width}px`
+  shapeCalculator = () => {
+    this.getRules()[0].style.width = `${this.width}px`
+    this.getRules()[0].style.height = `${this.width}px`
 
-    this.#getRules()[1].style.width = `${this.width-70}px`
-    this.#getRules()[1].style.height = `${this.width-70}px`
+    this.getRules()[1].style.width = `${this.width-70}px`
+    this.getRules()[1].style.height = `${this.width-70}px`
 
-    this.#getRules()[2].style.width = `${this.width-10}px`
-    this.#getRules()[2].style.height = `${this.width-10}px`
+    this.getRules()[2].style.width = `${this.width-10}px`
+    this.getRules()[2].style.height = `${this.width-10}px`
 
     var circle = this.shadow.querySelector(":host>div>svg>circle")
     circle.setAttribute("cy",(this.width-10)/2)
@@ -192,15 +192,15 @@ class potentiometer extends HTMLElement{
     circle.setAttribute("r",(this.width-10)/2-10)
 
     let circumference = 2*((this.width-10)/2-10)*Math.PI
-    this.#getRules()[3].style.strokeDasharray = `${circumference}`
-    this.#getRules()[3].style.strokeDashoffset = `${circumference-circumference*300/360}`
+    this.getRules()[3].style.strokeDasharray = `${circumference}`
+    this.getRules()[3].style.strokeDashoffset = `${circumference-circumference*300/360}`
   
-    this.#getRules()[4].style.width = `${this.width}px`
-    this.#getRules()[4].style.height = `${this.width}px`
+    this.getRules()[4].style.width = `${this.width}px`
+    this.getRules()[4].style.height = `${this.width}px`
 
-    this.#getRules()[5].style.width = `${this.width/2-30}px`
-    this.#getRules()[5].style.height = `${this.width/2-30}px`
-    this.#getRules()[5].style.borderWidth = `${this.width*2/100}px`
+    this.getRules()[5].style.width = `${this.width/2-30}px`
+    this.getRules()[5].style.height = `${this.width/2-30}px`
+    this.getRules()[5].style.borderWidth = `${this.width*2/100}px`
   }
 
   static get observedAttributes(){
@@ -210,20 +210,20 @@ class potentiometer extends HTMLElement{
   attributeChangedCallback(attr,oldValue,newValue){
     switch (attr) {
       case "value":
-        if(this.isConnected) this.#percentToAngle()
+        if(this.isConnected) this.percentToAngle()
       break;
     }
   }
 
-  #angleToPercent = (angle) =>{
+  angleToPercent = (angle) =>{
     return (0+(100-0)*(angle-0)/(300-0)).toFixed(2)
   }
 
-  #percentToAngle = () => {
-    this.#getRules()[1].style.transform = `rotateZ(${(0+(300-0)*(this.value-0)/(100-0))-150}deg)`
+  percentToAngle = () => {
+    this.getRules()[1].style.transform = `rotateZ(${(0+(300-0)*(this.value-0)/(100-0))-150}deg)`
   }
 
-  #getPos = (e) =>{
+  getPos = (e) =>{
     var centerX = e.target.offsetWidth / 2 
     var centerY = e.target.offsetHeight / 2
     var clickY = e.offsetY-centerY
@@ -241,20 +241,20 @@ class potentiometer extends HTMLElement{
     if(angle+150<0) angle = -150
     if(angle+150>300) angle = 150
 
-    this.value = this.#angleToPercent(angle+150)
+    this.value = this.angleToPercent(angle+150)
   }
 
   connectedCallback(){
     if(!this.darkmode) this.darkmode = false
-    this.width = this.#widthCheck(this.width)
+    this.width = this.widthCheck(this.width)
     if(!this.hasValue) this.value = (0).toFixed(2)
-    else this.#percentToAngle()
-    this.#shapeCalculator()
+    else this.percentToAngle()
+    this.shapeCalculator()
     let area = this.shadow.querySelector(":host>div>div:nth-of-type(3)")
     let mousedown = false
-    area.addEventListener("mousemove",(event)=>mousedown && this.#getPos(event))
+    area.addEventListener("mousemove",(event)=>mousedown && this.getPos(event))
     area.addEventListener("mousedown",()=>mousedown=true)
-    area.addEventListener("mousedown",(event)=>this.#getPos(event))
+    area.addEventListener("mousedown",(event)=>this.getPos(event))
     area.addEventListener("mouseup",()=>mousedown=false)
     area.addEventListener("mouseout",()=>mousedown=false)
     
