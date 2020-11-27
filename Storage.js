@@ -26,7 +26,6 @@ storageTemplate.innerHTML =
 `
 <style>
 :host{
-  width:500px;
   display:block;
   font-family:Arial, Helvetica, sans-serif;
   padding:10px;
@@ -48,7 +47,7 @@ storageTemplate.innerHTML =
   font-size:12px;
 }
 :host > div:nth-of-type(2) {
-  width:500px;
+  width:100%;
   height:15px;
   border-radius:15px;
   -webkit-backdrop-filter:blur(10px);
@@ -65,6 +64,7 @@ storageTemplate.innerHTML =
 :host > div:nth-of-type(2) > div {
   height:100%;
   cursor:pointer;
+  transition: background-color 0.2s linear;
 }
 :host > div:nth-of-type(3){
   padding:5px;
@@ -115,6 +115,18 @@ class storage extends HTMLElement{
     this.setAttribute("items",items)
   }
 
+  get unit(){
+    return this.getAttribute("unit")
+  }
+
+  get hasUnit(){
+    return this.hasAttribute("unit")
+  }
+
+  set unit(value){
+    this.setAttribute("unit",value)
+  }
+
   get total(){
     return this.getAttribute("total")
   }
@@ -139,18 +151,6 @@ class storage extends HTMLElement{
     this.setAttribute("darkmode",bool)
   }
 
-  static get observedAttributes(){
-    return ["darkmode"]
-  }
-
-  attributeChangedCallback(attr,oldValue,newValue){
-    switch (attr) {
-      case "darkmode":
-        if(this.isConnected) 
-      break
-    }
-  }
-
   getRules = () => {
     let sheets = this.shadow.styleSheets[2]
     let rules = sheets.cssRules || sheets.rules
@@ -165,22 +165,24 @@ class storage extends HTMLElement{
       let div = document.createElement("div")
       div.addEventListener("mouseenter",this.showName.bind(this))
       div.addEventListener("mouseleave",this.hideName.bind(this))
-      this.shadow.styleSheets[1].addRule(`:host>div:nth-of-type(2)>div:nth-of-type(${index+1})`,`min-width:${this.hasTotal ? item.value*100/this.total : item.value*100/sum}%;background-color:rgb(${this.darkmode == "true" ? darkColor[index]: lightColor[index]});`,0)
+      this.shadow.styleSheets[1].addRule(`:host>div:nth-of-type(2)>div:nth-of-type(${index+1})`,`min-width:${this.hasTotal ? item.value*100/this.total : item.value*100/sum}%;`,0)
+      this.shadow.styleSheets[1].addRule(`:host([darkmode=false])>div:nth-of-type(2)>div:nth-of-type(${index+1})`,`background-color:rgb(${lightColor[index]})`,0)
+      this.shadow.styleSheets[1].addRule(`:host([darkmode=true])>div:nth-of-type(2)>div:nth-of-type(${index+1})`,`background-color:rgb(${darkColor[index]})`,0)
       itemContainer.appendChild(div)
     })
-    this.shadow.querySelector(":host>div:nth-of-type(1)").innerHTML = `Usage: ${sum}GB / ${this.hasTotal ? this.total : sum}GB `
+    this.shadow.querySelector(":host>div:nth-of-type(1)").innerHTML = `${sum}${this.unit} / ${this.hasTotal ? this.total : sum}${this.unit}`
   }
 
   showName = (event) =>{
     var index = Array.from(this.shadow.querySelectorAll(":host>div:nth-of-type(2)>div")).indexOf(event.target)
-    this.getRules()[0].style.opacity = `1`
-    this.shadow.querySelector(":host>div:nth-of-type(3)").innerHTML = eval(this.items)[index].name +" "+ eval(this.items)[index].value+"GB"
+    this.getRules(2)[0].style.opacity = `1`
+    this.shadow.querySelector(":host>div:nth-of-type(3)").innerHTML = eval(this.items)[index].name +" "+ eval(this.items)[index].value+this.unit
     let parentWidth = this.shadow.querySelector(":host>div").offsetWidth
     let width = this.shadow.querySelector(":host>div:nth-of-type(3)").getBoundingClientRect().width
-    let leftMargin = event.target.offsetLeft - width/2 + event.target.offsetWidth/2
+    let leftMargin = event.target.offsetLeft - width/2 + event.target.offsetWidth/2 - 10
     if(leftMargin<0) leftMargin = 0
     else if(leftMargin+width > parentWidth ) leftMargin = parentWidth - width 
-    this.getRules()[0].style.marginLeft = `${leftMargin}px`
+    this.getRules(2)[0].style.marginLeft = `${leftMargin}px`
   }
 
   hideName = () => {
@@ -188,8 +190,10 @@ class storage extends HTMLElement{
   }
 
   connectedCallback(){
-    this.itemsAnalyzer()
+    if(!this.hasUnit) this.unit = ""
     if(!this.hasDarkmode) this.darkmode = false
+    this.itemsAnalyzer()
+    
   }
 }
 
