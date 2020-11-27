@@ -173,7 +173,7 @@ class tabBar extends HTMLElement{
 
   tabAdd = () =>{
     let itemContainer = this.shadow.querySelector(":host>div>div:nth-of-type(2)")
-    let itemName = this.items.split(";")
+    let itemName = eval(this.items) ? eval(this.items).items : tabItems.defaultItem
     itemName.forEach(item=>{
       let div = document.createElement("div")
       div.innerHTML = item
@@ -182,6 +182,7 @@ class tabBar extends HTMLElement{
   }
 
   connectedCallback(){
+    if(!this.hasItems) this.items = tabItems.default
     if(this.hasItems) this.tabAdd()
     this.itemCalculator()
     this.setContainerWidth()
