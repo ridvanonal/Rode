@@ -197,4 +197,6 @@ class storage extends HTMLElement{
   }
 }
 
+storage.prototype.darkswitcher = true
+
 customElements.define("ro-storage",storage)
