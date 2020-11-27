@@ -11,10 +11,20 @@
     <script src="../CircleProgress.js"></script>
     <script src="../TabBar.js"></script>
     <script src="../Potentiometer.js"></script>
+    <script src="../Storage.js"></script>
     <script src="../RoFunctions.js"></script>
     <script>
         var item = new tabItems()
-        item.items =["Tab1","Serhat Sarı","Rıdvan Önal"]
+        item.items =["Tab 1","Tab 2","Tab 3","Tab 4"]
+
+        var itemsSet = [
+            {name:"A",value:10},
+            {name:"B",value:20},
+            {name:"C",value:20},
+            {name:"D",value:30},
+            {name:"E",value:22},
+            {name:"F",value:22}
+        ]
     </script>
     <style>
         body{
@@ -80,6 +90,13 @@
             min-width: 120px;
             margin-left: 20px;
         }
+        .st{
+            margin-left: 20px;
+            width: 100%;
+        }
+        .st  ro-storage{
+            width: 100%;
+        }
         .line{
             width: 100%;
             display: flex;
@@ -111,19 +128,19 @@
             <div class="cont sb">
                 <div class="header">Switch Button</div>
                 <div class="content">
-                    <ro-switchbutton class="item" ontrue="deneme()"></ro-switchbutton>
+                    <ro-switchbutton></ro-switchbutton>
                 </div>
             </div>
             <div class="cont s">
                 <div class="header">Stepper</div>
                 <div class="content">
-                    <ro-stepper min="10" max="120" class="item"></ro-stepper>
+                    <ro-stepper min="10" max="120"></ro-stepper>
                 </div>
             </div>
             <div class="cont rb">
                 <div class="header">Range Bar</div>
                 <div class="content">
-                  <ro-sliderbar min="5" max="100" step="3" class="item" async></ro-sliderbar>
+                  <ro-sliderbar min="5" max="100" step="3" async></ro-sliderbar>
                 </div>
             </div>
         </div>
@@ -147,7 +164,7 @@
             <div class="cont cp">
               <div class="header">Circle Percent</div>
                 <div class="content">
-                  <ro-circleprogress percent="0" class="item"></ro-circleprogress>
+                  <ro-circleprogress percent="0"></ro-circleprogress>
                 </div>
             </div>
             <div class="cont p">
@@ -156,14 +173,13 @@
                 <ro-potentiometer></ro-potentiometer>
                 </div>
             </div>
+            <div class="cont st">
+                <div class="header">Storage</div>
+                <div class="content">
+                    <ro-storage total="150" items="itemsSet"></ro-storage>
+                </div>
+              </div>
         </div>
-        
     </div>
-
-    <script>
-        function deneme(){
-            
-        }
-    </script>
 </body>
 </html>
