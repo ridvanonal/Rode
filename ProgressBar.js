@@ -13,6 +13,7 @@ progressBarTemplate.innerHTML =
     border-radius: 15px;
     overflow: hidden;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     -webkit-transition: background-color .2s linear;
     -ms-transition: background-color .2s linear;
     transition: background-color .2s linear;
