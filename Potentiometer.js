@@ -16,6 +16,7 @@ potentiometerTemplate.innerHTML =
   border-radius: 100%;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: background-color 0.2s linear;
 }
 :host([darkmode=false]) > div{
