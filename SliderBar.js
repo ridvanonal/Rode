@@ -19,6 +19,8 @@ sliderBarTemplate.innerHTML =
                     background-color .2s linear;
     transition: border .09s linear,
                 background-color .2s linear !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   :host > div:hover{
     border-width: 5px;
