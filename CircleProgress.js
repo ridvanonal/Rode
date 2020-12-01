@@ -11,6 +11,7 @@ circleProgressTemplate.innerHTML =
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transform: rotate(-90deg);
     transition: background-color 0.2s linear;
   }
