@@ -24,6 +24,7 @@ switchButtonTemplate.innerHTML =
     -ms-user-select: none; 
     user-select: none;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   :host > div::after{
     content:"";
