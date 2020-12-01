@@ -5,67 +5,74 @@ stepperTemplate.innerHTML =
   :host{
     display:inline-block;
   }
-  :host > div{
-    transition: background-color 0.2s linear;
+  :host > div:nth-of-type(1){
     height: 30px;
     width: 16px;
-    border-radius: 15px;
-    overflow: hidden;
-    backdrop-filter:blur(10px)
+    border-radius: 16px;
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter:blur(10px);
+    transition:background-color .2s linear;
   }
-  :host([darkmode=false]) > div{
-    background-color: rgba(174,174,178,0.5) !important;
+  :host([darkmode=false]) > div:nth-of-type(1){
+    background-color: rgba(174,174,178,0.5);
   }
-  :host([darkmode=true]) > div{
-    background-color: rgba(99,99,102,0.5) !important;
+  :host([darkmode=true]) > div:nth-of-type(1){
+    background-color: rgba(99,99,102,0.5);
   }
-  :host > div > div{
+  :host > div:nth-of-type(1) > div{
     height: 15px;
     width: 16px;
     display: flex;
-    align-items:center;
+    align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s linear;
+    transition:background-color .2s linear;
   }
-  :host([darkmode=false]) > div > div:hover{
+  :host([darkmode=false]) > div:nth-of-type(1) > div:hover{
     background-color: rgb(0,122,255);
   }
-  :host([darkmode=true]) > div > div:hover{
+  :host([darkmode=true]) > div:nth-of-type(1) > div:hover{
     background-color: rgb(10,132,255);
   }
-  :host([darkmode=false]) > div > div::after{
-    border-color:rgba(65, 65, 65, 1);
+  :host > div:nth-of-type(1) > div:nth-of-type(1){
+    border-radius: 16px 16px 0px 0px;
   }
-  :host([darkmode=true]) > div > div::after{
-    border-color:rgba(0, 0, 0, 1);
+  :host > div:nth-of-type(1) > div:nth-of-type(2){
+    border-radius: 0px 0px 16px 16px;
   }
-  :host > div > div::after{
-    border-right: 2px solid; 
-    border-bottom: 2px solid;
-    height: 6px;
-    width: 6px;
-    box-sizing: border-box;
-    content: "";
-    transition:border-color 0.1s linear;
+  :host > div:nth-of-type(1) > div > svg {
+    height: 5px;
+    width: 10px;
   }
-  :host > div > div:nth-of-type(1)::after{
-    transform: rotate(-135deg);
-    margin-top: 3px;
+  :host > div:nth-of-type(1) > div > svg line {
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition:stroke .2s linear;
   }
-  :host > div > div:nth-of-type(2)::after{
-    transform: rotate(45deg);
-    margin-top: -3px;
+  :host([darkmode=false]) > div:nth-of-type(1) > div > svg line {
+    stroke: rgba(65,65,65,1);
   }
-  :host > div > div:hover::after{
-    border-color: white;
+  :host([darkmode=true]) > div:nth-of-type(1) > div > svg line {
+    stroke: rgba(0,0,0,1);
+  }
+  :host > div:nth-of-type(1) > div:hover > svg line{
+    stroke: rgba(255,255,255,1);
   }
   </style>
 
-  <div>
-      <div></div>
-      <div></div>
-  </div>
+  <div>  
+      <div>
+        <svg>
+          <line x1="20%" y1="80%" x2="50%" y2="20%"></line>
+          <line x1="80%" y1="80%" x2="50%" y2="20%"></line>
+        </svg>
+      </div>
+      <div>
+        <svg>
+          <line x1="20%" y1="20%" x2="50%" y2="80%"></line>
+          <line x1="80%" y1="20%" x2="50%" y2="80%"></line>
+        </svg>
+      </div>
+    </div> 
   `
 class stepper extends HTMLElement{
   constructor(){
@@ -218,7 +225,6 @@ class stepper extends HTMLElement{
     subtractButton.addEventListener("mouseup",this.onLongPressUp)
     subtractButton.addEventListener("mouseleave",this.onLongPressUp)
   }
-
 }
 
 stepper.prototype.darkswitcher = true
