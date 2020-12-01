@@ -32,6 +32,8 @@ storageTemplate.innerHTML =
   border-radius:15px;
   position:relative;
   transition: background-color 0.2s linear;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 :host([darkmode=false]) {
   background-color: rgba(174,174,178,0.2);
@@ -50,7 +52,6 @@ storageTemplate.innerHTML =
   width:100%;
   height:15px;
   border-radius:15px;
-  -webkit-backdrop-filter:blur(10px);
   display:flex;
   overflow:hidden;
   transition: background-color 0.2s linear;
@@ -73,7 +74,8 @@ storageTemplate.innerHTML =
   margin-top:5px;
   border-width:1px;
   border-style:solid;
-  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   opacity:0;
   transition:opacity .2s linear,
             margin .1s linear,
