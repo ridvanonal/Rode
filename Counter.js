@@ -4,6 +4,13 @@ counterTemplate.innerHTML =
   <style>
   :host{
     display:inline-block;
+    cursor: pointer;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
   }
   :host > div:nth-of-type(1){
     height: 30px;
@@ -12,13 +19,6 @@ counterTemplate.innerHTML =
     backdrop-filter: blur(10px); 
     -webkit-backdrop-filter:blur(10px);
     transition:background-color .2s linear;
-    cursor: pointer;
-    -webkit-touch-callout: none; 
-    -webkit-user-select: none;
-    -khtml-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none;
   }
   :host([darkmode=false]) > div:nth-of-type(1){
     background-color: rgba(174,174,178,0.5);
