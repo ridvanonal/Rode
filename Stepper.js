@@ -1,5 +1,5 @@
-const stepperTemplate = document.createElement("template")
-stepperTemplate.innerHTML = 
+const counterTemplate = document.createElement("template")
+counterTemplate.innerHTML = 
   `
   <style>
   :host{
@@ -12,6 +12,13 @@ stepperTemplate.innerHTML =
     backdrop-filter: blur(10px); 
     -webkit-backdrop-filter:blur(10px);
     transition:background-color .2s linear;
+    cursor: pointer;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
   }
   :host([darkmode=false]) > div:nth-of-type(1){
     background-color: rgba(174,174,178,0.5);
@@ -74,11 +81,11 @@ stepperTemplate.innerHTML =
       </div>
     </div> 
   `
-class stepper extends HTMLElement{
+class counter extends HTMLElement{
   constructor(){
     super()
     this.shadow = this.attachShadow({mode:"closed"})
-    this.shadow.appendChild(stepperTemplate.content.cloneNode(true))
+    this.shadow.appendChild(counterTemplate.content.cloneNode(true))
     this.longSetTimeOut
     this.longSetInterval
   }
@@ -227,6 +234,6 @@ class stepper extends HTMLElement{
   }
 }
 
-stepper.prototype.darkswitcher = true
+counter.prototype.darkswitcher = true
 
-customElements.define("ro-stepper",stepper)
+customElements.define("ro-counter",counter)
