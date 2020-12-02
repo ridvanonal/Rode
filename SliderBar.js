@@ -5,6 +5,13 @@ sliderBarTemplate.innerHTML =
   :host{
     display:block;
     height:50px;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
+    cursor:pointer;
   }
   :host > div{
     width:100%;
