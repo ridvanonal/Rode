@@ -4,6 +4,12 @@ circleProgressTemplate.innerHTML =
   <style>
   :host{
     display:inline-block;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
   }
   :host > div{
     border-radius: 100%;
