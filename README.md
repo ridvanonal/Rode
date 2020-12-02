@@ -9,41 +9,41 @@ This library enables the use of new html tags thanks to web components. The purp
 ## Switch Button
 #### Usage
 ```html
-<rode-switchbutton></rode-switchbutton>
+<ro-switchbutton></ro-switchbutton>
 ```
-To use it is sufficient to use this html tag. If no attributes are specified, some attributes are determined automatically.Two of them are bold mode and value.
-Darmode and value initial value are false. When the html tag tree opens, this component will look like this.
+To use it is sufficient to use this html tag. If no attributes are specified, some attributes are determined automatically. Two of them are darkmode and value.
+Darkmode and value initial value are false. When the html tag tree opens, this component will look like this.
 ```html
-<rode-switchbutton value="false" darkmode="false"></rode-switchbutton>
+<ro-switchbutton value="false" darkmode="false"></ro-switchbutton>
 ```
 #### Attributes of this HTML tag
 ##### value
 Value can have two values; true or false
 ```html
-<rode-switchbutton value="true||false"></rode-switchbutton>
+<ro-switchbutton value="true||false"></ro-switchbutton>
 ```
 ##### darkmode
 Darkmode can have two values; true or false
 ```html
-<rode-switchbutton darkmode="true||false"></rode-switchbutton>
+<ro-switchbutton darkmode="true||false"></ro-switchbutton>
 ```
 ##### name
 When the name attribute is specified, a hidden input is created and the value is written to this input. Thus, it becomes easier to use in a form.
 ```html
-<rode-switchbutton name="someName"></rode-switchbutton>
+<ro-switchbutton name="someName"></ro-switchbutton>
 ```
 ##### disabled <br>
 The disabled attribute does not take a value. This attribute disables the tag.
 ```html
-<rode-switchbutton disabled></rode-switchbutton>
+<ro-switchbutton disabled></ro-switchbutton>
 ```
 ##### ontrue
 This attribute runs the defined function when the tag value is true.
 ```html
-<rode-switchbutton ontrue="someFunciton()"></rode-switchbutton>
+<ro-switchbutton ontrue="someFunciton()"></ro-switchbutton>
 ```
 ##### onfalse
 This attribute runs the defined function when the tag value is false.
 ```html
-<rode-switchbutton onfalse="someFunciton()"></rode-switchbutton>
+<ro-switchbutton onfalse="someFunciton()"></ro-switchbutton>
 ```
