@@ -42,11 +42,25 @@ storageTemplate.innerHTML =
   background-color: rgba(99,99,102,0.2);
 }
 :host > div:nth-of-type(1) {
-  text-align:right;
+  width:100%;
   margin-bottom:5px;
-  padding-right:5px;
-  color:rgba(120,120,120,1);
-  font-size:12px;
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:rgba(72,72,74,1);
+}
+:host > div:nth-of-type(1) > div:nth-of-type(1) {
+  width:calc(100% - 100px);
+  text-align:left;
+  opacity:0;
+  transition:opacity .2s linear;
+  white-space:nowrap; 
+  text-overflow: ellipsis;
+  overflow:hidden;
+}
+:host > div:nth-of-type(1) > div:nth-of-type(2) {
+  width:auto;
+  text-align:right;
 }
 :host > div:nth-of-type(2) {
   width:100%;
@@ -67,36 +81,14 @@ storageTemplate.innerHTML =
   cursor:pointer;
   transition: background-color 0.2s linear;
 }
-:host > div:nth-of-type(3){
-  padding:5px;
-  display:inline-block;
-  border-radius:10px;
-  margin-top:5px;
-  border-width:1px;
-  border-style:solid;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity:0;
-  transition:opacity .2s linear,
-            margin .1s linear,
-            background-color 0.2s linear;
-  position:absolute;
-  font-size:13px;
-}
-:host([darkmode=false]) > div:nth-of-type(3){
-  background-color:rgba(174,174,178,0.5);
-  border-color:rgba(174,174,178,0.5);
-}
-:host([darkmode=true]) > div:nth-of-type(3){
-  background-color:rgba(99,99,102,0.5);
-  border-color:rgba(99,99,102,0.5);
-}
 </style>
 <style></style>
-<style> :host > div:nth-of-type(3){} </style>
-<div>Hi</div>
+<style> :host>div:nth-of-type(1)>div:nth-of-type(1){}  </style>
+<div>
+  <div></div>
+  <div></div>
+</div>
 <div></div>
-<div>*</div>
 `
 class storage extends HTMLElement{
   constructor(){
@@ -172,19 +164,13 @@ class storage extends HTMLElement{
       this.shadow.styleSheets[1].addRule(`:host([darkmode=true])>div:nth-of-type(2)>div:nth-of-type(${index+1})`,`background-color:rgb(${darkColor[index]})`,0)
       itemContainer.appendChild(div)
     })
-    this.shadow.querySelector(":host>div:nth-of-type(1)").innerHTML = `${sum}${this.unit} / ${this.hasTotal ? this.total : sum}${this.unit}`
+    this.shadow.querySelector(":host>div:nth-of-type(1)>div:nth-of-type(2)").innerHTML = `${sum}${this.unit} / ${this.hasTotal ? this.total : sum}${this.unit}`
   }
 
   showName = (event) =>{
     var index = Array.from(this.shadow.querySelectorAll(":host>div:nth-of-type(2)>div")).indexOf(event.target)
-    this.getRules(2)[0].style.opacity = `1`
-    this.shadow.querySelector(":host>div:nth-of-type(3)").innerHTML = eval(this.items)[index].name +" "+ eval(this.items)[index].value+this.unit
-    let parentWidth = this.shadow.querySelector(":host>div").offsetWidth
-    let width = this.shadow.querySelector(":host>div:nth-of-type(3)").getBoundingClientRect().width
-    let leftMargin = event.target.offsetLeft - width/2 + event.target.offsetWidth/2 - 10
-    if(leftMargin<0) leftMargin = 0
-    else if(leftMargin+width > parentWidth ) leftMargin = parentWidth - width 
-    this.getRules(2)[0].style.marginLeft = `${leftMargin}px`
+    this.getRules()[0].style.opacity = `1`
+    this.shadow.querySelector(":host>div:nth-of-type(1)>div:nth-of-type(1)").innerHTML = `<b>${eval(this.items)[index].name}</b> ${eval(this.items)[index].value+this.unit}`
   }
 
   hideName = () => {
@@ -195,7 +181,6 @@ class storage extends HTMLElement{
     if(!this.hasUnit) this.unit = ""
     if(!this.hasDarkmode) this.darkmode = false
     this.itemsAnalyzer()
-    
   }
 }
 
