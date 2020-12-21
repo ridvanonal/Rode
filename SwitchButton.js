@@ -3,13 +3,13 @@ switchButtonTemplate.innerHTML =
   `
   <style>
   :host{
-    width:38px;
-    height:24px;
     display:block;
+    width:38px; 
+    height:24px;
   }
   :host > div{
-    height: 24px;
-    width: 38px;
+    height: 100%;
+    width: 100%;
     border-radius: 14px;
     padding: 2px;
     box-sizing: border-box;
@@ -69,18 +69,21 @@ switchButtonTemplate.innerHTML =
     opacity:0.5 !important;
   }
   </style>
-  
   <div></div>
   `
 class switchButton extends HTMLElement{
   constructor(){
     super()
-    this.selector = this.attachShadow({mode:"closed"})
-    this.selector.appendChild(switchButtonTemplate.content.cloneNode(true))
+    this.shadow = this.attachShadow({mode:"closed"})
+    this.shadow.appendChild(switchButtonTemplate.content.cloneNode(true))
   }
 
   get value(){
-    return this.getAttribute("value")
+    switch(this.getAttribute("value").toLowerCase().trim()){
+      case "true": return true;
+      case "false": case null: return false;
+      default: return false;
+    }
   }
   
   get hasValue(){
@@ -89,18 +92,6 @@ class switchButton extends HTMLElement{
 
   set value(bool){
     this.setAttribute("value",bool)
-  }
-
-  get name(){
-    return this.getAttribute("name")
-  }
-  
-  get hasName(){
-    return this.hasAttribute("name")
-  }
-
-  set name(name){
-    this.setAttribute("name",name)
   }
 
   get darkmode(){
@@ -125,56 +116,51 @@ class switchButton extends HTMLElement{
   }
 
   get ontrue(){
-    return this.getAttribute("ontrue")
-  }
-
-  get hasOntrue(){
-    return this.hasAttribute("ontrue")
+    return this._ontrue
   }
 
   set ontrue(event){
-    this.setAttribute("ontrue",event)
+    this._ontrue = event
   }
 
   get onfalse(){
-    return this.getAttribute("onfalse")
-  }
-
-  get hasOnfalse(){
-    return this.hasAttribute("onfalse")
+    return this._onfalse
   }
 
   set onfalse(event){
-    this.setAttribute("onfalse",event)
+    this._onfalse = event
+  }
+
+  get onchange(){
+    return this._onchange
+  }
+
+  set onchange(event){
+    this._onchange = event
   }
 
   static get observedAttributes(){
-    return ["value","name","darkmode","disabled","ontrue","onfalse"]
+    return ["value","disabled","ontrue","onfalse"]
   }
 
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
       case 'value':
-        if(this.isConnected && this.hasName) this.querySelector("input").value = this.value
-        if(this.isConnected && this.hasOntrue && newValue == "true") try{eval(this.ontrue)}catch{console.log("%c onTrue : Function Error","color:rgb(255,59,48);font-weight:bold")}
-        if(this.isConnected && this.hasOnfalse && newValue == "false") try{eval(this.onfalse)}catch{console.log("%c onFalse : Function Error","color:rgb(255,59,48);font-weight:bold")}
-      break
-      case 'name':
-        if(this.isConnected && this.hasName) this.querySelector("input").name = this.name
+        if(this.isConnected && this.ontrue && newValue == "true") this.ontrue()
+        if(this.isConnected && this.onfalse && newValue == "false") this.onfalse()
+        if(this.isConnected && this.onchange) this.onchange()
       break
     }
   }
 
   onClick = () => {
-    if(this.value == "true") this.value = "false"
-    else if(this.value == "false") this.value = "true"
+    this.value = !this.value
   }
   
-  connectedCallback(){   
-    if(this.hasName) this.innerHTML = `<input type="hidden" name=${this.name} value=${this.value} />`
+  connectedCallback(){ 
     if(!this.hasValue) this.value = false
     if(!this.hasDarkmode) this.darkmode = false
-    this.selector.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
+    this.shadow.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
   }
 }
 
