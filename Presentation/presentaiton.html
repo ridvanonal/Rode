@@ -6,7 +6,7 @@
     <title>RO | Web Components</title>
     <script src="../ProgressBar.js"></script>
     <script src="../SliderBar.js"></script>
-    <script src="../Stepper.js"></script>
+    <script src="../Counter.js"></script>
     <script src="../SwitchButton.js"></script>
     <script src="../CircleProgress.js"></script>
     <script src="../TabBar.js"></script>
@@ -20,7 +20,7 @@
         var itemsSet = [
             {name:"A",value:10},
             {name:"B",value:20},
-            {name:"C",value:20},
+            {name:"C",value:100},
             {name:"D",value:30},
             {name:"E",value:22},
             {name:"F",value:22}
@@ -156,7 +156,7 @@
             <div class="cont tb">
                 <div class="header">Tab Menu</div>
                 <div class="content">
-                  <ro-tabbar items="item"></ro-tabbar>
+                  <ro-tabbar items="item"></ro-tabbar><br>
                 </div>
             </div>
         </div>
@@ -176,7 +176,7 @@
             <div class="cont st">
                 <div class="header">Storage</div>
                 <div class="content">
-                    <ro-storage total="150" items="itemsSet" unit="GB"></ro-storage>
+                    <ro-storage total="250" items="itemsSet" unit="MB"></ro-storage>
                 </div>
               </div>
         </div>
