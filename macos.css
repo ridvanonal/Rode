@@ -1,0 +1,7 @@
+.macos-input-focus{
+  box-shadow: 0px 0px 0px 5px transparent;
+}
+.macos-input-focus:focus{
+  transition: box-shadow .2s linear;
+  box-shadow: 0px 0px 0px 2px rgb(0,122,255);
+}
