@@ -4,8 +4,15 @@ switchButtonTemplate.innerHTML =
   <style>
   :host{
     display:block;
-    width:38px; 
-    height:24px;
+    width:34px; 
+    height:22px;
+    cursor: pointer;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
   }
   :host > div{
     height: 100%;
@@ -16,21 +23,12 @@ switchButtonTemplate.innerHTML =
     -webkit-transition: background-color .2s linear;
     -ms-transition: background-color .2s linear;
     transition: background-color .2s linear;
-    cursor: pointer;
-    -webkit-touch-callout: none; 
-    -webkit-user-select: none;
-    -khtml-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
   :host > div::after{
     content:"";
     display:block;
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     background-color: rgba(255,255,255,1) ;
     border-radius: 100%;
     box-shadow: 0px 1px 3px rgba(0,0,0,0.15);
@@ -41,28 +39,28 @@ switchButtonTemplate.innerHTML =
     transition: margin-left .2s cubic-bezier(0.175,0.885,0.32,1.275),
                 opacity .2s linear;
   }
-  :host([darkmode=true]) > div{
-    background-color: rgba(99,99,102,0.5) !important;
+  :host([dark=true]) > div{
+    background-color: rgb(72,72,74) !important;
   }  
-  :host([darkmode=false]) > div{
-    background-color: rgba(174,174,178,0.5) !important;
+  :host([dark=false]) > div{
+    background-color: rgb(229,229,234) !important;
   }
-  :host([darkmode=true][value=true]) > div{
-    background-color: rgba(48,209,88,1) !important;
+  :host([dark=true][checked]) > div{
+    background-color: rgb(48,209,88) !important;
   } 
-  :host([darkmode=false][value=true]) > div{
-    background-color: rgba(59,199,89,1) !important;
+  :host([dark=false][checked]) > div{
+    background-color: rgb(59,199,89) !important;
   }  
-  :host([value=true]) > div::after{
-    margin-left: 14px !important;
+  :host([checked]) > div::after{
+    margin-left: 12px !important;
   } 
   :host([disabled]) > div{
     pointer-events: none !important;
   }
-  :host([darkmode=true][value=true][disabled]) > div{
+  :host([dark=true][checked][disabled]) > div{
     background-color: rgba(48,209,88,0.75) !important;
   } 
-  :host([darkmode=false][value=true][disabled]) > div{
+  :host([dark=false][checked][disabled]) > div{
     background-color: rgba(59,199,89,0.75) !important;
   }  
   :host([disabled]) > div::after{
@@ -78,32 +76,25 @@ class switchButton extends HTMLElement{
     this.shadow.appendChild(switchButtonTemplate.content.cloneNode(true))
   }
 
-  get value(){
-    switch(this.getAttribute("value").toLowerCase().trim()){
-      case "true": return true;
-      case "false": case null: return false;
-      default: return false;
-    }
-  }
-  
-  get hasValue(){
-    return this.hasAttribute("value")
+  get checked(){
+    return this.hasAttribute("checked")
   }
 
-  set value(bool){
-    this.setAttribute("value",bool)
+  set checked(bool){
+    if(bool) this.setAttribute("checked","")
+    else this.removeAttribute("checked")
   }
 
-  get darkmode(){
-    return this.getAttribute("darkmode")
+  get dark(){
+    return this.getAttribute("dark")
   }
 
-  get hasDarkmode(){
-    return this.hasAttribute("dakmode")
+  get hasDark(){
+    return this.hasAttribute("dark")
   }
 
-  set darkmode(bool){
-    this.setAttribute("darkmode",bool)
+  set dark(bool){
+    this.setAttribute("dark",bool)
   }
 
   get disabled(){
@@ -115,52 +106,26 @@ class switchButton extends HTMLElement{
     else this.removeAttribute("disabled")
   }
 
-  get ontrue(){
-    return this._ontrue
-  }
-
-  set ontrue(event){
-    this._ontrue = event
-  }
-
-  get onfalse(){
-    return this._onfalse
-  }
-
-  set onfalse(event){
-    this._onfalse = event
-  }
-
-  get onchange(){
-    return this._onchange
-  }
-
-  set onchange(event){
-    this._onchange = event
-  }
-
   static get observedAttributes(){
-    return ["value","disabled","ontrue","onfalse"]
+    return ["checked"]
   }
 
   attributeChangedCallback(attr,oldValue,newValue){
     switch(attr){
-      case 'value':
-        if(this.isConnected && this.ontrue && newValue == "true") this.ontrue()
-        if(this.isConnected && this.onfalse && newValue == "false") this.onfalse()
-        if(this.isConnected && this.onchange) this.onchange()
+      case 'checked':
+        const valuechange = new CustomEvent("change",{detail:{value : this.checked}})
+        this.dispatchEvent(valuechange)
       break
     }
   }
 
   onClick = () => {
-    this.value = !this.value
+    this.checked = !this.checked
   }
   
   connectedCallback(){ 
-    if(!this.hasValue) this.value = false
-    if(!this.hasDarkmode) this.darkmode = false
-    this.shadow.querySelector(":host>div").addEventListener("click",this.onClick.bind(this))
+    if(!this.hasDark) this.dark = false
+    this.shadow.querySelector(":host>div").addEventListener("click",this.onClick)  
   }
 }
 
