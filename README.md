@@ -16,32 +16,31 @@ Darkmode and value initial value are false. When the html tag tree opens, this c
 ```html
 <ro-switchbutton value="false" dark="false"></ro-switchbutton>
 ```
-#### Attributes of this HTML tag
-##### checked
+#### Attributes
+##### • checked
 The checked attribute does not take a value. Ckecked or not.
 ```html
 <ro-switchbutton checked></ro-switchbutton>
-<ro-switchbutton></ro-switchbutton>
 ```
-##### dark
+##### • dark
 Darkmode can have two values; true or false
 ```html
 <ro-switchbutton dark="true||false"></ro-switchbutton>
 ```
-##### disabled <br>
+##### • disabled
 The disabled attribute does not take a value. This attribute disables the tag. Disabled or not.
 ```html
 <ro-switchbutton disabled></ro-switchbutton>
 ```
 #### Events
 The SwitchButton has only one event. 
-##### change
+##### • change
 It can observe with addEventListener
 ```html
-<ro-switchbutton id="switchButton1"></ro-switchbutton>
+<ro-switchbutton id="switchButton"></ro-switchbutton>
 ```
 ```js
-document.querySelector("switchButton1").addEventListener("change",function(event){
+document.querySelector("switchButton").addEventListener("change",function(event){
   return event.detail.checked // Returns true or false
 })
 ```
