@@ -14,36 +14,34 @@ This library enables the use of new html tags thanks to web components. The purp
 To use it is sufficient to use this html tag. If no attributes are specified, some attributes are determined automatically. Two of them are darkmode and value.
 Darkmode and value initial value are false. When the html tag tree opens, this component will look like this.
 ```html
-<ro-switchbutton value="false" darkmode="false"></ro-switchbutton>
+<ro-switchbutton value="false" dark="false"></ro-switchbutton>
 ```
 #### Attributes of this HTML tag
-##### value
-Value can have two values; true or false
+##### checked
+The checked attribute does not take a value. Ckecked or not.
 ```html
-<ro-switchbutton value="true||false"></ro-switchbutton>
+<ro-switchbutton checked></ro-switchbutton>
+<ro-switchbutton></ro-switchbutton>
 ```
-##### darkmode
+##### dark
 Darkmode can have two values; true or false
 ```html
-<ro-switchbutton darkmode="true||false"></ro-switchbutton>
-```
-##### name
-When the name attribute is specified, a hidden input is created and the value is written to this input. Thus, it becomes easier to use in a form.
-```html
-<ro-switchbutton name="someName"></ro-switchbutton>
+<ro-switchbutton dark="true||false"></ro-switchbutton>
 ```
 ##### disabled <br>
-The disabled attribute does not take a value. This attribute disables the tag.
+The disabled attribute does not take a value. This attribute disables the tag. Disabled or not.
 ```html
 <ro-switchbutton disabled></ro-switchbutton>
 ```
-##### ontrue
-This attribute runs the defined function when the tag value is true.
+#### Events
+The SwitchButton has only one event. 
+##### change
+It can observe with addEventListener
 ```html
-<ro-switchbutton ontrue="someFunciton()"></ro-switchbutton>
+<ro-switchbutton id="switchButton1"></ro-switchbutton>
 ```
-##### onfalse
-This attribute runs the defined function when the tag value is false.
-```html
-<ro-switchbutton onfalse="someFunciton()"></ro-switchbutton>
+```js
+document.querySelector("switchButton1").addEventListener("change",function(event){
+  return event.detail.checked // Returns true or false
+})
 ```
